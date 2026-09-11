@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ data.candidate_name }} · 简历深度诊断 · Toivo Career</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+{# ============================================================
+   Toivo Career · Resume Diagnosis Report · V2.1
+   变更: 目录 + 章节级分页 + 占位符高亮修复
+   顺序: 封面 → 目录 → 执行摘要 → 岗位定位
+        → 六维雷达 A (雷达+分数条+总判断) → 六维证据 B
+        → Top 3 处方 (1/页) → 关键词矩阵 (6/页, 自动分页)
+        → 面试验证点 (2/页) → 7 天计划 → 主编寄语
+        → 附录 A 其余问题 (1/页) → 附录 B STAR (1/页)
+        → 尾页 (收紧)
+   ============================================================ #}
+
+{% set is_jd = data.mode == 'jd_targeted' %}
+{% set line_top = 'TOIVO · CAREER' %}
+{% set line_slogan = 'CAREER DOCUMENTS · INTERVIEW READINESS · PROFESSIONAL NARRATIVE' %}
+
+{% macro pn(key) -%}
+{%- if toc_pages and toc_pages.get(key) -%}{{ '%02d' | format(toc_pages[key]) }}{%- else -%}—{%- endif -%}
+{%- endmacro %}
+
+<!-- ============ 01 · 封面 ============ -->
+<section class="page cover" data-chapter="cover">
+  <div class="cover-top">
+    <div class="cover-mark">{{ line_top }}</div>
+    <div class="cover-issue">ISSUE Nº TVC-{{ report_no }}</div>
+  </div>
+
+  <div class="cover-inner">
+    <div class="cover-serial">SERIES {{ data.series_no }} · RESUME DIAGNOSIS</div>
+    <div class="brand-logo">Toivo</div>
+    <div class="brand-slogan">{{ line_slogan }}</div>
+    <div class="divider"></div>
+
+    <div class="report-name">{{ data.product_name }}</div>
+    <div class="report-sub">
+      {% if is_jd %}JD-TARGETED · JD 定制竞争力诊断{% else %}GENERAL · 通用竞争力诊断{% endif %}
+    </div>
+
+    <div class="candidate">
+      <div class="candidate-lbl">FOR / 本册专属于</div>
+      <div class="name">{{ data.candidate_name }}</div>
+    </div>
+  </div>
+
+  <div class="cover-footer">
+    <div class="cover-foot-l">
+      <div class="foot-lbl">TOIVO CAREER · EST. 2026</div>
+      <div class="foot-sub">A PROFESSIONAL DIAGNOSIS FOR YOUR CAREER MATERIALS</div>
+    </div>
+    <div class="cover-foot-r">
+      <div class="foot-lbl">DATE</div>
+      <div class="foot-date">{{ report_date }}</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 · 目录 ============ -->
+<section class="page toc-page" data-chapter="toc">
+  <div class="toc-eyebrow">CONTENTS · 报告目录</div>
+  <div class="toc-title">Contents</div>
+  <div class="toc-title-cn">读这份报告的路线图</div>
+  <div class="toc-divider"></div>
+
+  <ul class="toc-list">
+    <li class="toc-entry">
+      <div class="toc-num">01</div>
+      <div class="toc-body">
+        <div class="toc-name">三分钟看懂这份诊断</div>
+        <div class="toc-sub">你的当前可投递状态 · 三大优势 · 三大最影响投递的问题 · 本周应做的事</div>
+      </div>
+      <div class="toc-page-no">{{ pn('ch01') }}</div>
+    </li>
+    <li class="toc-entry">
+      <div class="toc-num">02</div>
+      <div class="toc-body">
+        <div class="toc-name">你现在站在哪、看向哪里</div>
+        <div class="toc-sub">候选人定位 · 适合级别 · 与目标岗位的最大呈现层差距</div>
+      </div>
+      <div class="toc-page-no">{{ pn('ch02') }}</div>
+    </li>
+    <li class="toc-entry">
+      <div class="toc-num">03</div>
+      <div class="toc-body">
+        <div class="toc-name">每一分,都能指回简历里的一句话</div>
+        <div class="toc-sub">六维竞争力评分 · 简历证据 · 优先改法</div>
+      </div>
+      <div class="toc-page-no">{{ pn('ch03') }}</div>
+    </li>
+    <li class="toc-entry">
+      <div class="toc-num">04</div>
+      <div class="toc-body">
+        <div class="toc-name">先改这 3 处,收益最高</div>
+        <div class="toc-sub">按影响面 × 修改成本选出的核心处方 · 原文 / 改法 / 面试预判 / 完成标准</div>
+      </div>
+      <div class="toc-page-no">{{ pn('ch04') }}</div>
+    </li>
+    <li class="toc-entry">
+      <div class="toc-num">05</div>
+      <div class="toc-body">
+        <div class="toc-name">哪些关键词该加,哪些千万别硬塞</div>
+        <div class="toc-sub">四类关键词与真实性边界 · 什么情况才该写进简历</div>
+      </div>
+      <div class="toc-page-no">{{ pn('ch05') }}</div>
+    </li>
+    <li class="toc-entry">
+      <div class="toc-num">06</div>
+      <div class="toc-body">
+        <div class="toc-name">面试官会针对这几处追问</div>
+        <div class="toc-sub">高概率问题 · 回答框架 · 面试前准备 · 避免的表达</div>
+      </div>
+      <div class="toc-page-no">{{ pn('ch06') }}</div>
+    </li>
+    <li class="toc-entry">
+      <div class="toc-num">07</div>
+      <div class="toc-body">
+        <div class="toc-name">接下来的一周,一天做一件事</div>
+        <div class="toc-sub">七天修改与验证计划 · 每天一个焦点 · 每天一个完成标志</div>
+      </div>
+      <div class="toc-page-no">{{ pn('ch07') }}</div>
+    </li>
+    <li class="toc-entry">
+      <div class="toc-num">—</div>
+      <div class="toc-body">
+        <div class="toc-name">主编寄语</div>
+        <div class="toc-sub">合上简历后,来自一位资深顾问的一句话</div>
+      </div>
+      <div class="toc-page-no">{{ pn('editor') }}</div>
+    </li>
+    <li class="toc-entry appendix">
+      <div class="toc-num">A</div>
+      <div class="toc-body">
+        <div class="toc-name">Top 3 之外,同样值得改的问题</div>
+        <div class="toc-sub">每页一张问题卡 · 可按自己节奏推进</div>
+      </div>
+      <div class="toc-page-no">{{ pn('appA') }}</div>
+    </li>
+    <li class="toc-entry appendix">
+      <div class="toc-num">B</div>
+      <div class="toc-body">
+        <div class="toc-name">怎么把"参与了 / 负责了"讲成一段故事</div>
+        <div class="toc-sub">STAR 升级示范 · 原文 → STAR → 可复制版本 → 面试锚点</div>
+      </div>
+      <div class="toc-page-no">{{ pn('appB') }}</div>
+    </li>
+  </ul>
+
+  <div class="toc-footnote">
+    * 页码基于本册实际渲染生成,不同候选人的报告长度会略有差异。附录部分按证据密度自动分页。
+  </div>
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>CONTENTS · 目录</span></div>
+</section>
+
+<!-- ============ 03 · 执行摘要 ============ -->
+<section class="page" data-chapter="ch01">
+  <a data-toc-key="ch01"></a>
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>RESUME DIAGNOSIS · {{ data.candidate_name }}</span></div>
+
+  <div class="section-eyebrow">EXECUTIVE SUMMARY · 执行摘要</div>
+  <h1 class="section-title"><span class="num">01</span>三分钟看懂这份诊断</h1>
+
+  <div class="scope-note">
+    <strong>SCOPE</strong>{{ data.scope_disclaimer }}
+  </div>
+
+  <div class="exec-hero">
+    <div class="exec-lbl">OVERALL VERDICT · 综合判断</div>
+    <div class="exec-verdict">{{ data.one_line_verdict }}</div>
+    <div class="exec-calibration">{{ data.score_calibration }}</div>
+  </div>
+
+  {% set rd = data.submission_readiness %}
+  {% set rd_class = {'ready_to_submit':'rd-ready','needs_light_edit':'rd-light','needs_substantial_revision':'rd-substantial','needs_rewrite':'rd-rewrite'} %}
+  {% set rd_label = {'ready_to_submit':'READY · 可投递','needs_light_edit':'LIGHT EDIT · 小改后可投','needs_substantial_revision':'REVISE · 需实质修订','needs_rewrite':'REWRITE · 需要重写'} %}
+  <div class="readiness">
+    <span class="rd-badge {{ rd_class[rd.status] }}">{{ rd_label[rd.status] }}</span>
+    <div class="rd-body">
+      <div class="rd-reason">{{ rd.reason }}</div>
+      <div class="rd-changes"><strong>投递前最少动作</strong>
+        {% for c in rd.minimum_changes_before_submit %}{{ c }}{% if not loop.last %} · {% endif %}{% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="exec-grid">
+    <div class="exec-col opp">
+      <h4>▲ TOP OPPORTUNITIES · 最值得放大的优势</h4>
+      <ul>
+      {% for op in data.executive_summary.top_opportunities %}<li>{{ op }}</li>{% endfor %}
+      </ul>
+    </div>
+    <div class="exec-col blk">
+      <h4>▼ TOP BLOCKERS · 最影响投递的问题</h4>
+      <ul>
+      {% for bk in data.executive_summary.top_blockers %}<li>{{ bk }}</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="this-week">
+    <h4>THIS WEEK · 本周应做的三件事</h4>
+    <ol>
+    {% for tw in data.executive_summary.this_week_focus %}<li>{{ tw }}</li>{% endfor %}
+    </ol>
+  </div>
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>CHAPTER 01 · 执行摘要</span></div>
+</section>
+
+<!-- ============ 04 · 岗位定位 ============ -->
+<section class="page" data-chapter="ch02">
+  <a data-toc-key="ch02"></a>
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>RESUME DIAGNOSIS · {{ data.candidate_name }}</span></div>
+
+  <div class="section-eyebrow">CHAPTER 02 · 岗位定位与竞争力画像</div>
+  <h1 class="section-title"><span class="num">02</span>你现在站在哪、看向哪里</h1>
+  <p class="chapter-lede">先对齐一件事: 这份简历目前呈现出的定位、适合投的档位、以及和目标岗位之间的距离。</p>
+
+  <div class="score-hero">
+    <div class="score-label">RESUME PRESENTATION SCORE · 简历呈现质量分</div>
+    <div class="score-num">{{ data.overall_score }}</div>
+    <div class="verdict">{{ data.role_positioning }}</div>
+  </div>
+
+  <div class="positioning-grid">
+    <div class="pos-card">
+      <div class="lbl">TARGET ROLE · 目标方向</div>
+      <div class="val">{{ data.target_role }}{% if data.target_company_or_industry %} · {{ data.target_company_or_industry }}{% endif %}</div>
+    </div>
+    <div class="pos-card">
+      <div class="lbl">STAGE · 候选人阶段</div>
+      <div class="val">{{ data.candidate_stage }}</div>
+    </div>
+    <div class="pos-card">
+      <div class="lbl">TARGET LEVEL · 适合级别</div>
+      <div class="val">{{ data.match_analysis.target_level }}</div>
+    </div>
+    <div class="pos-card">
+      <div class="lbl">POSITION · 竞争位置</div>
+      <div class="val">{{ data.match_analysis.competitive_positioning }}</div>
+    </div>
+    <div class="pos-card wide">
+      <div class="lbl">BIGGEST GAP · 距离目标最大的呈现层差距</div>
+      <div class="val">{{ data.match_analysis.biggest_gap }}</div>
+    </div>
+    {% if is_jd %}
+    <div class="pos-card wide">
+      <div class="lbl">JD ALIGNMENT · 与 JD 的匹配度</div>
+      <div class="val">{{ data.match_analysis.jd_alignment }}</div>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>CHAPTER 02 · 岗位定位</span></div>
+</section>
+
+<!-- ============ 05 · 六维评分 A: 结论页 ============ -->
+<section class="page radar-page" data-chapter="ch03a">
+  <a data-toc-key="ch03"></a>
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>RESUME DIAGNOSIS · {{ data.candidate_name }}</span></div>
+
+  <div class="section-eyebrow">CHAPTER 03 · 六维评分与证据</div>
+  <h1 class="section-title"><span class="num">03</span>每一分,都能指回简历里的一句话</h1>
+  <p class="chapter-lede">这六个维度评价的是<strong>这份简历在招聘视角下的呈现效果</strong>,不评价候选人的实际能力。结论在本页,依据在下一页。</p>
+
+  <div class="radar-hero">
+    <div class="radar-container">{{ radar_svg | safe }}</div>
+    <div class="radar-verdict">
+      <h4>OVERALL READING · 综合判断</h4>
+      <p>{{ data.role_positioning }}</p>
+      <p>{{ data.match_analysis.biggest_gap }}</p>
+    </div>
+  </div>
+
+  <div class="radar-score-strip">
+    {% for name, val in data.radar.items() %}
+    <div class="rss-item">
+      <div class="rss-name">{{ name }}</div>
+      <div class="rss-num">{{ val }}</div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>CHAPTER 03 · 评分</span></div>
+</section>
+
+<!-- ============ 06 · 六维评分 B: 证据页 ============ -->
+<section class="page" data-chapter="ch03b">
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>RESUME DIAGNOSIS · {{ data.candidate_name }}</span></div>
+
+  <div class="section-eyebrow">CHAPTER 03 · 评分依据(续)</div>
+  <h1 class="section-title"><span class="num">03</span>每一分,都能指回简历里的一句话</h1>
+  <p class="chapter-lede">左侧每个分数,对应右侧一段简历原文与一条优先改法。</p>
+
+  <table class="radar-evidence-table">
+    <thead>
+      <tr><th>维度</th><th style="text-align:center">得分</th><th>简历证据</th><th>优先改法</th></tr>
+    </thead>
+    <tbody>
+    {% for row in data.radar_evidence %}
+      <tr>
+        <td class="dim-name">{{ row.dimension }}</td>
+        <td class="dim-score">{{ row.score }}</td>
+        <td class="dim-evidence">{{ row.resume_evidence }}</td>
+        <td class="dim-fix">{{ row.priority_fix }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>CHAPTER 03 · 评分依据</span></div>
+</section>
+
+{# ============ 07+ · Top 3 处方 (取 severity=high 中前 3 条; 每页 1 张) ============ #}
+{% set top_rx = [] %}
+{% for w in data.weaknesses if w.severity == 'high' %}
+  {% if loop.index <= 3 %}{% set _ = top_rx.append(w) %}{% endif %}
+{% endfor %}
+{% if top_rx | length < 3 %}
+  {% for w in data.weaknesses if w.severity == 'medium' %}
+    {% if top_rx | length < 3 %}{% set _ = top_rx.append(w) %}{% endif %}
+  {% endfor %}
+{% endif %}
+
+{% for rx in top_rx %}
+<section class="page" data-chapter="ch04-{{ loop.index }}">
+  {% if loop.first %}<a data-toc-key="ch04"></a>{% endif %}
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>RESUME DIAGNOSIS · {{ data.candidate_name }}</span></div>
+
+  {% if loop.first %}
+  <div class="section-eyebrow">CHAPTER 04 · TOP 3 处方</div>
+  <h1 class="section-title"><span class="num">04</span>先改这 3 处,收益最高</h1>
+  <p class="chapter-lede">按<strong>影响面 × 修改成本</strong>综合选出的三条。每条都给出: 原文 · 为什么弱 · 改法 · 面试后果 · 完成标准。</p>
+  {% else %}
+  <div class="section-eyebrow">CHAPTER 04 · TOP 3 处方(续 · {{ loop.index }}/{{ top_rx | length }})</div>
+  <h1 class="section-title"><span class="num">04</span>先改这 3 处,收益最高</h1>
+  {% endif %}
+
+  {% set eff_map = {'low':'低成本','medium':'中成本','high':'高成本'} %}
+  {% set area_map = {'screening':'初筛','interview':'面试','offer_negotiation':'谈 Offer'} %}
+
+  <div class="rx-card severity-{{ rx.severity }}">
+    <div class="rx-header">
+      <div class="rx-title">Rx · {{ rx.problem }}</div>
+      <div class="rx-meta">
+        <span class="m-tag sev-{{ rx.severity }}">{{ rx.severity | upper }}</span>
+        <span class="m-tag">影响: {{ area_map[rx.impact_area] }}</span>
+        <span class="m-tag eff-{{ rx.effort }}">{{ eff_map[rx.effort] }}</span>
+      </div>
+    </div>
+
+    <div class="rx-row">
+      <div class="rx-lbl">简历原文</div>
+      <div class="rx-val original">{{ rx.original_text }}</div>
+    </div>
+
+    <div class="rx-row">
+      <div class="rx-lbl">为什么弱</div>
+      <div class="rx-val">{{ rx.why_this_reads_weak }}</div>
+    </div>
+
+    <div class="rx-row">
+      <div class="rx-lbl">影响说明</div>
+      <div class="rx-val">{{ rx.impact_explanation }}</div>
+    </div>
+
+    <div class="rx-row">
+      <div class="rx-lbl">改写示范</div>
+      <div class="rx-val rewrite">
+        {% if rx.rewrite_type == 'ready_to_use' %}
+          <span class="rewrite-type-badge rt-ready">READY · 可直接使用</span>
+        {% else %}
+          <span class="rewrite-type-badge rt-verify">VERIFY · 待补充信息</span>
+        {% endif %}
+        {{ rx.rewrite | hi }}
+      </div>
+    </div>
+
+    {% if rx.rewrite_type == 'needs_verification' and rx.facts_to_verify %}
+    <div class="rx-row">
+      <div class="rx-lbl">待核实事实</div>
+      <div class="rx-val">
+        <div class="facts-list">
+          <div class="fl-title">需要候选人核实/补充</div>
+          <ul>{% for f in rx.facts_to_verify %}<li>{{ f }}</li>{% endfor %}</ul>
+        </div>
+        {% if rx.evidence_needed %}<div style="margin-top:6px;font-size:9pt;color:var(--ink-3);"><strong style="color:var(--gold);font-size:8pt;letter-spacing:1px;">如何取证 · </strong>{{ rx.evidence_needed }}</div>{% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="rx-row">
+      <div class="rx-lbl">面试预判</div>
+      <div class="rx-val anchor">{{ rx.interview_anchor }}</div>
+    </div>
+
+    <div class="rx-row">
+      <div class="rx-lbl">完成标准</div>
+      <div class="rx-val">{{ rx.definition_of_done }}</div>
+    </div>
+  </div>
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>CHAPTER 04 · TOP 3 处方 · {{ loop.index }}/{{ top_rx | length }}</span></div>
+</section>
+{% endfor %}
+
+{# ============ 关键词矩阵 · 每页 6 条自动分页 ============ #}
+{% set kw_per_page = 6 %}
+{% set kw_items = data.keyword_matrix['items'] %}
+{% set kw_pages = ((kw_items | length) / kw_per_page) | round(0, 'ceil') | int %}
+{% set cat_class = {'must_show_for_target_role':'cat-must','evidence_to_strengthen':'cat-strengthen','add_only_if_true':'cat-conditional','do_not_force_add':'cat-optional'} %}
+{% set cat_name = {'must_show_for_target_role':'必须体现','evidence_to_strengthen':'加强证据','add_only_if_true':'按需添加','do_not_force_add':'不必强加'} %}
+{% set st_class = {'present_and_strong':'st-strong','present_but_weak':'st-weak','absent':'st-absent'} %}
+{% set st_name = {'present_and_strong':'已充分体现','present_but_weak':'已有但弱','absent':'未体现'} %}
+
+{% for pg in range(kw_pages) %}
+<section class="page" data-chapter="ch05-{{ pg + 1 }}">
+  {% if pg == 0 %}<a data-toc-key="ch05"></a>{% endif %}
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>RESUME DIAGNOSIS · {{ data.candidate_name }}</span></div>
+
+  {% if pg == 0 %}
+  <div class="section-eyebrow">CHAPTER 05 · 关键词证据矩阵</div>
+  <h1 class="section-title"><span class="num">05</span>哪些关键词该加,哪些千万别硬塞</h1>
+  <p class="chapter-lede">四类关键词的应对策略完全不同。<strong>「按需添加」</strong>那一档,只有当你确实做过、能在面试中讲清楚时才加。</p>
+  <div class="kw-context">{{ data.keyword_matrix.context }}</div>
+  {% else %}
+  <div class="section-eyebrow">CHAPTER 05 · 关键词矩阵(续 · {{ pg + 1 }}/{{ kw_pages }})</div>
+  <h1 class="section-title"><span class="num">05</span>哪些关键词该加,哪些千万别硬塞</h1>
+  {% endif %}
+
+  <table class="kw-matrix compact">
+    <thead>
+      <tr>
+        <th>关键词</th>
+        <th>分类</th>
+        <th>简历状态</th>
+        <th>建议做什么</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for kw in kw_items[pg * kw_per_page : (pg + 1) * kw_per_page] %}
+      <tr>
+        <td class="kw-name">{{ kw.keyword }}</td>
+        <td class="kw-cat"><span class="cat-badge {{ cat_class[kw.category] }}">{{ cat_name[kw.category] }}</span></td>
+        <td class="kw-status"><span class="status-badge {{ st_class[kw.resume_status] }}">{{ st_name[kw.resume_status] }}</span></td>
+        <td class="kw-rec">{{ kw.recommendation }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>CHAPTER 05 · 关键词矩阵 · {{ pg + 1 }}/{{ kw_pages }}</span></div>
+</section>
+{% endfor %}
+
+{# ============ 面试重点验证点 (每页 2 条) ============ #}
+{% set ip_per_page = 2 %}
+{% set ip_pages = ((data.interview_preparation | length) / ip_per_page) | round(0, 'ceil') | int %}
+{% for pg in range(ip_pages) %}
+<section class="page" data-chapter="ch06-{{ pg + 1 }}">
+  {% if pg == 0 %}<a data-toc-key="ch06"></a>{% endif %}
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>RESUME DIAGNOSIS · {{ data.candidate_name }}</span></div>
+
+  {% if pg == 0 %}
+  <div class="section-eyebrow">CHAPTER 06 · 面试重点验证点</div>
+  <h1 class="section-title"><span class="num">06</span>面试官会针对这几处追问</h1>
+  <p class="chapter-lede">下面每一道题,都从简历里的某句话/某个空缺推演而来。<strong>为什么会问 · 如何答 · 面试前准备什么 · 避免什么表达</strong>——一次说清。</p>
+  {% else %}
+  <div class="section-eyebrow">CHAPTER 06 · 面试重点验证点(续 · {{ pg + 1 }}/{{ ip_pages }})</div>
+  <h1 class="section-title"><span class="num">06</span>面试官会针对这几处追问</h1>
+  {% endif %}
+
+  {% for ip in data.interview_preparation[pg * ip_per_page : (pg + 1) * ip_per_page] %}
+  <div class="iprep">
+    <div class="ip-q">{{ ip.question }}</div>
+    <div class="ip-row"><span class="ip-lbl">为什么会问</span>{{ ip.why_it_will_be_asked }}</div>
+
+    <div class="ip-row" style="margin-top:6px;"><span class="ip-lbl">回答框架</span></div>
+    <ol class="ip-framework">
+      {% for step in ip.answer_framework if step %}<li>{{ step }}</li>{% endfor %}
+      {% if ip.answer_framework is string %}<li>{{ ip.answer_framework }}</li>{% endif %}
+    </ol>
+
+    <div class="ip-row"><span class="ip-lbl">面试前准备</span></div>
+    <ul class="ip-facts">
+      {% for f in ip.facts_to_prepare %}<li>{{ f }}</li>{% endfor %}
+    </ul>
+
+    <div class="ip-avoid"><strong style="color:var(--danger);font-size:8pt;letter-spacing:2px;">AVOID · </strong>{{ ip.avoid_saying }}</div>
+  </div>
+  {% endfor %}
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>CHAPTER 06 · 面试验证点 · {{ pg + 1 }}/{{ ip_pages }}</span></div>
+</section>
+{% endfor %}
+
+{# ============ 7 天求职行动计划 (前 4 天一页, 后 3 天一页) ============ #}
+{% set plan_pages = [data.seven_day_plan[0:4], data.seven_day_plan[4:7]] %}
+{% for chunk in plan_pages %}
+<section class="page" data-chapter="ch07-{{ loop.index }}">
+  {% if loop.first %}<a data-toc-key="ch07"></a>{% endif %}
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>RESUME DIAGNOSIS · {{ data.candidate_name }}</span></div>
+
+  {% if loop.first %}
+  <div class="section-eyebrow">CHAPTER 07 · 7 天求职行动计划</div>
+  <h1 class="section-title"><span class="num">07</span>接下来的一周,一天做一件事</h1>
+  <p class="chapter-lede">读完前面所有诊断,最容易的失败方式是"改一切",然后一件也没改完。这份计划把 7 天拆成 7 个专注单元,每天一个焦点,每天一个可核对的完成标志。</p>
+  {% else %}
+  <div class="section-eyebrow">CHAPTER 07 · 7 天行动计划(续)</div>
+  <h1 class="section-title"><span class="num">07</span>接下来的一周,一天做一件事</h1>
+  {% endif %}
+
+  <div class="plan-grid">
+    {% for d in chunk %}
+    <div class="plan-day">
+      <div class="p-day">
+        <div class="p-lbl">DAY</div>
+        <div class="p-num">{{ d.day }}</div>
+      </div>
+      <div class="p-body">
+        <div class="p-focus">{{ d.focus }}</div>
+        <ul class="p-actions">
+          {% for a in d.actions %}<li>{{ a }}</li>{% endfor %}
+        </ul>
+      </div>
+      <div class="p-right">
+        <span class="p-lbl-mini">DONE 完成标志</span>
+        {{ d.definition_of_done }}
+        <span class="p-lbl-mini">GAIN 预期收益</span>
+        {{ d.expected_gain }}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>CHAPTER 07 · 7 天计划</span></div>
+</section>
+{% endfor %}
+
+<!-- ============ 主编寄语 ============ -->
+<section class="page" data-chapter="editor">
+  <a data-toc-key="editor"></a>
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>RESUME DIAGNOSIS · {{ data.candidate_name }}</span></div>
+
+  <div class="section-eyebrow">EDITOR'S NOTE · 主编寄语</div>
+  <h1 class="section-title">最后想对你说的一段话</h1>
+
+  <div class="final-words">
+    {{ data.final_words }}
+    <div class="signature">— Toivo Career · Diagnosis Team</div>
+  </div>
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>EDITOR'S NOTE · 主编寄语</span></div>
+</section>
+
+{# ============ 附录 A: 每页 1 张问题卡 ============ #}
+{% set appendix_ws = [] %}
+{% set top_ids = top_rx | map(attribute='problem') | list %}
+{% for w in data.weaknesses if w.problem not in top_ids %}{% set _ = appendix_ws.append(w) %}{% endfor %}
+
+{% if appendix_ws | length > 0 %}
+{% for w in appendix_ws %}
+<section class="page" data-chapter="appA-{{ loop.index }}">
+  {% if loop.first %}<a data-toc-key="appA"></a>{% endif %}
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>RESUME DIAGNOSIS · {{ data.candidate_name }}</span></div>
+
+  {% if loop.first %}
+  <div class="appendix-eyebrow">APPENDIX A · 其余问题清单</div>
+  <h1 class="section-title"><span class="num">A</span>Top 3 之外,同样值得改的问题</h1>
+  <p class="chapter-lede">这些问题严重度低于 Top 3,但每一条依然会在具体场景中被扣分。<strong>一页一条,按自己节奏推进。</strong></p>
+  {% else %}
+  <div class="appendix-eyebrow">APPENDIX A · 其余问题(续 · {{ loop.index }}/{{ appendix_ws | length }})</div>
+  <h1 class="section-title"><span class="num">A</span>Top 3 之外,同样值得改的问题</h1>
+  {% endif %}
+
+  <div class="card weakness solo severity-{{ w.severity }}">
+    <h3>
+      <span class="tag tag-{{ w.severity }}">{{ w.severity | upper }}</span>
+      {{ w.problem }}
+    </h3>
+    <div class="label">简历原文</div>
+    <blockquote>{{ w.original_text }}</blockquote>
+    <div class="label">为什么呈现不足</div>
+    <p>{{ w.why_this_reads_weak }}</p>
+    <div class="label">
+      改写建议
+      {% if w.rewrite_type == 'ready_to_use' %}
+        <span class="rewrite-type-badge rt-ready" style="margin-left:8px;">READY</span>
+      {% else %}
+        <span class="rewrite-type-badge rt-verify" style="margin-left:8px;">VERIFY</span>
+      {% endif %}
+    </div>
+    <p>{{ w.rewrite | hi }}</p>
+    {% if w.rewrite_type == 'needs_verification' and w.facts_to_verify %}
+    <div class="facts-list">
+      <div class="fl-title">待核实</div>
+      <ul>{% for f in w.facts_to_verify %}<li>{{ f }}</li>{% endfor %}</ul>
+    </div>
+    {% endif %}
+    <div class="label">完成标准</div>
+    <p>{{ w.definition_of_done }}</p>
+  </div>
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>APPENDIX A · 其余问题 · {{ loop.index }}/{{ appendix_ws | length }}</span></div>
+</section>
+{% endfor %}
+{% endif %}
+
+{# ============ 附录 B: STAR 升级示范 (每页 1 条) ============ #}
+{% set stars = data.project_deep_dive.star_upgrade_examples %}
+{% for s in stars %}
+<section class="page" data-chapter="appB-{{ loop.index }}">
+  {% if loop.first %}<a data-toc-key="appB"></a>{% endif %}
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>RESUME DIAGNOSIS · {{ data.candidate_name }}</span></div>
+
+  {% if loop.first %}
+  <div class="appendix-eyebrow">APPENDIX B · STAR 升级示范</div>
+  <h1 class="section-title"><span class="num">B</span>怎么把"参与了/负责了"讲成一段故事</h1>
+  <p class="chapter-lede"><strong>{{ data.project_deep_dive.current_state }}</strong></p>
+  {% else %}
+  <div class="appendix-eyebrow">APPENDIX B · STAR 升级示范(续 · {{ loop.index }}/{{ stars | length }})</div>
+  {% endif %}
+
+  <div class="star-box">
+    <div class="star-idx">示例 {{ loop.index }} / {{ stars | length }}</div>
+
+    <div class="stage stage-original">✗ 原文</div>
+    <p>{{ s.original_bullet }}</p>
+
+    <div class="stage stage-problem">✎ 呈现问题</div>
+    <p>{{ s.problem }}</p>
+
+    <div class="stage stage-upgrade">✓ STAR 化升级版
+      {% if s.rewrite_type == 'ready_to_use' %}
+        <span class="rewrite-type-badge rt-ready" style="margin-left:8px;">READY</span>
+      {% else %}
+        <span class="rewrite-type-badge rt-verify" style="margin-left:8px;">VERIFY</span>
+      {% endif %}
+    </div>
+    <p>{{ s.upgraded_version | hi }}</p>
+
+    {% if s.copy_ready_bullet %}
+    <div class="stage stage-upgrade">✎ 可复制版本 · Copy-ready</div>
+    <p style="background:#f0f7f3;padding:8px 12px;border-radius:3px;border-left:2px solid #b8dcc5;">{{ s.copy_ready_bullet | hi }}</p>
+    {% endif %}
+
+    {% if s.rewrite_type == 'needs_verification' and s.evidence_needed %}
+    <div class="facts-list">
+      <div class="fl-title">补齐这些信息后即可使用</div>
+      <ul>{% for e in s.evidence_needed %}<li>{{ e }}</li>{% endfor %}</ul>
+    </div>
+    {% endif %}
+
+    <div class="stage stage-problem">◎ 面试预判 · Interview Anchor</div>
+    <p style="color:var(--primary);font-weight:500;">Q · {{ s.interview_anchor }}</p>
+  </div>
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>APPENDIX B · STAR 升级 · {{ loop.index }}/{{ stars | length }}</span></div>
+</section>
+{% endfor %}
+
+<!-- ============ 尾页 (product_line=career 专属) ============ -->
+{% if data.product_line == 'career' %}
+<section class="page end-page" data-chapter="end">
+  <div class="end-top">
+    <div class="end-mark">TOIVO · CAREER</div>
+    <div class="end-issue">ISSUE Nº TVC-{{ report_no }} · {{ report_date }}</div>
+  </div>
+
+  <div class="end-hero">
+    <div class="thank">END OF DIAGNOSIS</div>
+    <div class="end-brand">Toivo</div>
+    <div class="end-slogan">CAREER DOCUMENTS · INTERVIEW READINESS · PROFESSIONAL NARRATIVE</div>
+    <div class="end-line"></div>
+    <div class="end-copy">
+      这份报告不评价你,评价的是你交给外部世界的那份材料。<br>
+      改的是简历,长的是你对自己经历的理解。
+    </div>
+  </div>
+
+  <div class="end-series">
+    <div class="series-title">TOIVO CAREER · FOLLOW-UP SERVICES · 后续可选服务</div>
+    <div class="services-grid-3">
+      <div class="svc-item">
+        <div class="svc-no">02</div>
+        <div class="svc-name">JD 定制简历优化</div>
+        <div class="svc-desc">针对具体岗位<br>做经历排序 · 关键词校准 · 语言重写</div>
+      </div>
+      <div class="svc-item">
+        <div class="svc-no">03</div>
+        <div class="svc-name">核心项目深度梳理</div>
+        <div class="svc-desc">一对一挖掘 1-2 个核心项目<br>输出可讲 20 分钟的完整叙事</div>
+      </div>
+      <div class="svc-item">
+        <div class="svc-no">04</div>
+        <div class="svc-name">修改后二次复诊</div>
+        <div class="svc-desc">简历改完后再跑一次<br>对比前后差异 · 追问未解疑问</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="end-scope-note">
+    {{ data.privacy_and_scope_note }}
+  </div>
+
+  <div class="end-foot">
+    <div class="end-foot-l">
+      <div class="ef-lbl">ABOUT · 关于</div>
+      <div class="ef-txt">TOIVO CAREER · 芬兰语「希望」<br>做一份让你被认真对待的求职材料。</div>
+    </div>
+    <div class="end-foot-r">
+      <div class="ef-lbl">FOLLOW-UP · 追问</div>
+      <div class="ef-txt">本册可在 3 日内追问一次<br>请附上册号 TVC-{{ report_no }}</div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+</body>
+</html>

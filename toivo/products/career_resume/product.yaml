@@ -1,0 +1,26 @@
+# toivo/products/career_resume · product.yaml
+#
+# 一条业务线一份 YAML。所有可能"以后要换"的东西都放这里,不要在代码里 hard-code。
+# 新版本(V3、JD 定制) 到时新开一个业务线目录 + 新 yaml, 老版本保留即可。
+
+key: career_resume
+display_name: "简历深度诊断 · 通用版"
+version: "2.2"
+notes: |
+  产品线: Career · **通用竞争力诊断** (不做 JD 定制)。
+  JD 定制版是独立业务包 jd_targeted_resume/, 有自己的 prompt / schema / template。
+  对应 prompts/resume_v2.txt。24-27 页 A4 PDF, 硬闸门开启。
+
+# ---- Prompt / 模板 / 样式 ----
+# 相对本目录, 由 pipeline 拼路径, 不要在这里写绝对路径。
+prompt_file: prompts/resume_v2.txt
+template_file: report.html        # 位于 templates/ 目录下
+css_file: report.css              # 位于 templates/ 目录下
+
+# ---- 默认调用参数 (可被 CLI --model / --temperature 覆盖) ----
+default_model: claude-sonnet-5
+max_tokens: 12000
+temperature: 0.3
+
+# ---- 业务线私有元信息 (Product 基类通过 meta.extras 读) ----
+schema_class: toivo.products.career_resume.schema:ResumeDiagnosis

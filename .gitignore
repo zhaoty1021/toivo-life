@@ -1,0 +1,61 @@
+# ============================================================================
+# Toivo Life · .gitignore
+# 原则: 只提交源代码 + prompt/template 素材 + 配置模板。生成物 / 密钥 / 缓存
+#      / 大二进制 / 编辑器状态一律不进 git。
+# ============================================================================
+
+# ---- Python 编译产物 ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ---- 环境 ----
+.venv/
+venv/
+env/
+.python-version
+
+# ---- 密钥与本地配置 (关键: 决不能提交) ----
+.env
+.env.local
+.env.*.local
+
+# ---- 生成产物 (每次运行都会重出, 没必要进 git) ----
+# 例外: output/ 下的示例 JSON 可能想留作回归基线, 需要时用 `git add -f` 显式加
+output/*.pdf
+output/*.html
+output/*.json
+
+# ---- 输入原文 (可能包含真实简历个人信息) ----
+# 需要提交示例简历时, 放 tests/fixtures/ 或 archive/samples/, 明确匿名
+input/*.txt
+input/*.md
+input/*.pdf
+input/*.docx
+!input/.gitkeep
+
+# ---- 编辑器 / OS ----
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ---- Playwright ----
+playwright-report/
+test-results/
+
+# ---- Claude Code 本地会话 (工作区级别的调用记录, 不要提交) ----
+# .claude/ 里如果只有项目级 skill / plans, 可以提交; 但会话历史别提。
+.claude/session_history/
+.claude/logs/
