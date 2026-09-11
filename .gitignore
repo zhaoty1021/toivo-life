@@ -41,6 +41,7 @@ input/*.md
 input/*.pdf
 input/*.docx
 !input/.gitkeep
+!input/README.md
 
 # ---- 编辑器 / OS ----
 .DS_Store
