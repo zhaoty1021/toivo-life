@@ -1,0 +1,16 @@
+key: jd_targeted_resume
+display_name: "JD 定制简历策略报告"
+version: "1.0"
+notes: |
+  产品线: Career · **JD 定制版** (高客单)。
+  用户任务: 我的简历是否值得投这一个岗位, 应该如何针对它修改?
+  判断基准: 用户提交的具体 JD 原文, 不是通用招聘画像。
+  与 career_resume 完全独立: 自己的 prompt / schema / template / InputModel。
+  第一版仅交付各区块可直接替换文案包 (不输出完整 Word/LaTex 简历成品)。
+prompt_file: prompts/jd_targeted_v1.txt
+template_file: report.html
+css_file: report.css
+default_model: claude-sonnet-5
+max_tokens: 16000
+temperature: 0.3
+schema_class: toivo.products.jd_targeted_resume.schema:JDTargetedResumeReport

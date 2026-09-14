@@ -18,10 +18,15 @@ def _load_career_resume() -> Product:
     return CareerResumeProduct()
 
 
+def _load_jd_targeted_resume() -> Product:
+    from .jd_targeted_resume import JDTargetedResumeProduct
+    return JDTargetedResumeProduct()
+
+
 _REGISTRY: Dict[str, Callable[[], Product]] = {
     "career_resume": _load_career_resume,
+    "jd_targeted_resume": _load_jd_targeted_resume,
     # 预留:
-    # "jd_targeted_resume": lambda: __import__(...).JDTargetedResumeProduct(),
     # "project_deep_dive":  lambda: __import__(...).ProjectDeepDiveProduct(),
 }
 
