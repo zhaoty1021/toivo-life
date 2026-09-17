@@ -1,0 +1,1015 @@
+/* ========== Toivo · JD 定制简历策略报告 · 视觉规范 V1 ========== */
+/* 复用 career_resume 的品牌变量,只新增 Match Board 四色专属浅底与 jd-* 组件样式 */
+
+:root {
+  --primary: #1e3a5f;
+  --primary-light: #2c5282;
+  --gold: #c9a961;
+  --gold-light: #e0c98a;
+  --danger: #c0392b;
+  --warning: #d68910;
+  --success: #27ae60;
+  --info: #3498db;
+  --ink: #1a1a1a;
+  --ink-2: #4a4a4a;
+  --ink-3: #7a7a7a;
+  --line: #e0e0e0;
+  --bg: #ffffff;
+  --bg-soft: #fafaf7;
+  --bg-card: #f7f4ec;
+
+  /* Match Board 四色专属浅底 (整格填色) */
+  --mb-matched-bg: #e8f5e9;
+  --mb-matched-line: #b8dcc5;
+  --mb-weakly-bg: #fff8e1;
+  --mb-weakly-line: #f0d896;
+  --mb-not-evidenced-bg: #fff3e0;
+  --mb-not-evidenced-line: #f0c896;
+  --mb-missing-bg: #ffebee;
+  --mb-missing-line: #f0c4bd;
+}
+
+@page { size: A4; margin: 0; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  font-family: "PingFang SC", "Microsoft YaHei", "Source Han Sans CN", -apple-system, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  font-size: 11pt;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  width: 210mm;
+  height: 297mm;
+  padding: 22mm 18mm 20mm 18mm;
+  position: relative;
+  page-break-after: always;
+  break-after: page;
+  background: var(--bg);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.page:last-child { page-break-after: auto; break-after: auto; }
+
+.jd-blocker-card,
+.jd-rw-card,
+.jd-iq-card,
+.final-words,
+.jd-cl-block { break-inside: avoid; page-break-inside: avoid; }
+
+/* ========== 页眉页脚 ========== */
+.header-brand {
+  position: absolute;
+  top: 10mm; left: 18mm; right: 18mm;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 8pt; color: var(--ink-3); letter-spacing: 2px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+}
+.header-brand .brand { color: var(--primary); font-weight: 600; letter-spacing: 4px; }
+
+.footer-brand {
+  position: absolute;
+  bottom: 10mm; left: 18mm; right: 18mm;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 8pt; color: var(--ink-3);
+  border-top: 1px solid var(--line);
+  padding-top: 6px;
+}
+
+/* ========== 封面 (复用 career_resume 蓝金渐变) ========== */
+.cover {
+  background:
+    radial-gradient(circle at 78% 22%, rgba(201,169,97,0.18) 0%, transparent 42%),
+    radial-gradient(circle at 15% 82%, rgba(201,169,97,0.08) 0%, transparent 45%),
+    linear-gradient(160deg, #1e3a5f 0%, #142748 55%, #0a1727 100%);
+  color: #fff; padding: 0;
+  display: flex; flex-direction: column; justify-content: space-between;
+  height: 297mm; position: relative; overflow: hidden;
+}
+.cover::before {
+  content: ""; position: absolute; top: 32mm; right: -20mm;
+  width: 90mm; height: 90mm;
+  border: 1px solid rgba(201,169,97,0.35);
+  border-radius: 50%;
+}
+.cover::after {
+  content: ""; position: absolute; top: 42mm; right: -10mm;
+  width: 70mm; height: 70mm;
+  border: 1px solid rgba(201,169,97,0.2);
+  border-radius: 50%;
+}
+.cover-top {
+  padding: 18mm 22mm 0 22mm;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 8pt; letter-spacing: 4px;
+  color: rgba(255,255,255,0.55); z-index: 2;
+}
+.cover-top .cover-mark {
+  color: var(--gold); letter-spacing: 6px; font-weight: 600;
+}
+.cover-inner {
+  padding: 15mm 22mm 10mm 22mm;
+  flex: 1;
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative; z-index: 2;
+}
+.cover .cover-serial {
+  font-size: 9pt; letter-spacing: 8px; color: var(--gold);
+  margin-bottom: 18px; font-weight: 500;
+}
+.cover .brand-logo {
+  font-size: 68pt; font-weight: 700; letter-spacing: 8px;
+  color: #fff; margin-bottom: 6px;
+  font-family: Georgia, "Times New Roman", serif; line-height: 1;
+}
+.cover .brand-slogan {
+  font-size: 8.5pt; letter-spacing: 5px;
+  color: var(--gold-light); margin-bottom: 50px; font-weight: 300;
+}
+.cover .divider {
+  width: 48px; height: 2px; background: var(--gold); margin-bottom: 34px;
+}
+.cover .report-name {
+  font-size: 30pt; font-weight: 300; letter-spacing: 3px;
+  color: #fff; line-height: 1.25; margin-bottom: 8px;
+}
+.cover .report-sub {
+  font-size: 10pt; color: rgba(255,255,255,0.5);
+  letter-spacing: 5px; margin-bottom: 60px; font-weight: 300;
+}
+.cover .candidate {
+  border-top: 1px solid rgba(201,169,97,0.35);
+  padding-top: 22px; max-width: 78%;
+}
+.cover .candidate-lbl {
+  font-size: 8pt; color: var(--gold); letter-spacing: 4px; margin-bottom: 10px;
+}
+.cover .candidate .name {
+  font-size: 24pt; color: #fff; font-weight: 500; letter-spacing: 5px;
+  margin-bottom: 12px;
+}
+.cover .jd-cover-target {
+  font-size: 11pt; color: rgba(255,255,255,0.85);
+  letter-spacing: 2px; line-height: 1.6;
+}
+.cover .jd-cover-target .lbl {
+  color: var(--gold); font-size: 8pt; letter-spacing: 3px;
+  margin-right: 8px; font-weight: 600;
+}
+
+/* Phase 0 · 首页 SKU 边界声明 · 直白告诉用户"本册交付的是什么" */
+.cover-scope-boundary {
+  margin-top: 26px;
+  padding: 12px 16px;
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  border-left: 3px solid var(--gold);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+  max-width: 560px;
+}
+.cover-scope-boundary .scope-boundary-title {
+  font-size: 8.5pt; letter-spacing: 3px;
+  color: var(--gold); font-weight: 700;
+  margin-bottom: 6px;
+}
+.cover-scope-boundary .scope-boundary-body {
+  font-size: 9.5pt; line-height: 1.65;
+  color: rgba(255, 255, 255, 0.82);
+}
+.cover-scope-boundary .scope-boundary-body strong {
+  color: #fff; font-weight: 600;
+}
+
+.cover-footer {
+  padding: 0 22mm 18mm 22mm;
+  display: flex; justify-content: space-between; align-items: flex-end; z-index: 2;
+}
+.cover-footer .cover-foot-l, .cover-footer .cover-foot-r { line-height: 1.7; }
+.cover-footer .foot-lbl {
+  font-size: 7.5pt; color: var(--gold); letter-spacing: 4px; margin-bottom: 4px;
+}
+.cover-footer .foot-sub {
+  font-size: 9pt; color: rgba(255,255,255,0.5); letter-spacing: 1px;
+}
+.cover-footer .foot-date {
+  font-size: 12pt; color: #fff; letter-spacing: 3px; font-family: Georgia, serif;
+}
+.cover-footer .cover-foot-r { text-align: right; }
+
+/* ========== 目录 ========== */
+.toc-page {
+  padding: 24mm 24mm 16mm 24mm;
+  background: #fff;
+}
+.toc-eyebrow {
+  font-size: 8pt; letter-spacing: 6px; color: var(--gold);
+  font-weight: 600; margin-bottom: 8px;
+}
+.toc-title {
+  font-family: Georgia, serif;
+  font-size: 28pt; font-weight: 700;
+  color: var(--primary); margin-bottom: 4px; letter-spacing: 2px;
+}
+.toc-title-cn {
+  font-size: 12pt; color: var(--ink-2);
+  letter-spacing: 3px; margin-bottom: 18px; font-weight: 400;
+}
+.toc-divider {
+  width: 56px; height: 2px; background: var(--gold); margin-bottom: 16px;
+}
+.toc-list { list-style: none; padding: 0; margin: 0; }
+.toc-entry {
+  display: grid;
+  grid-template-columns: 44px 1fr 46px;
+  align-items: baseline; gap: 12px;
+  padding: 9px 0 7px 0;
+  border-bottom: 1px dashed var(--line);
+}
+.toc-num {
+  font-family: Georgia, serif;
+  font-size: 15pt; font-weight: 700; color: var(--gold); line-height: 1;
+}
+.toc-body { min-width: 0; }
+.toc-body .toc-name {
+  font-size: 11pt; font-weight: 600; color: var(--primary);
+  letter-spacing: 1px; margin-bottom: 2px;
+}
+.toc-body .toc-sub {
+  font-size: 8.6pt; color: var(--ink-3);
+  line-height: 1.5; letter-spacing: 0.3px;
+}
+.toc-page-no {
+  font-family: Georgia, serif;
+  font-size: 12pt; font-weight: 600; color: var(--primary);
+  text-align: right;
+  border-bottom: 2px solid var(--gold);
+  padding-bottom: 2px; min-width: 32px;
+}
+.toc-footnote {
+  margin-top: 14px;
+  font-size: 7.8pt; color: var(--ink-3);
+  letter-spacing: 0.5px; line-height: 1.7; font-style: italic;
+  border-top: 1px solid var(--line); padding-top: 8px;
+}
+
+/* ========== 章节标题 (复用) ========== */
+h1.section-title {
+  font-size: 22pt; color: var(--primary);
+  font-weight: 600; letter-spacing: 1px; margin-bottom: 4px;
+  display: flex; align-items: baseline; gap: 12px;
+}
+h1.section-title .num {
+  color: var(--gold); font-size: 30pt; font-weight: 700;
+  font-family: Georgia, serif;
+}
+.section-eyebrow {
+  font-size: 9pt; color: var(--ink-3); letter-spacing: 4px;
+  margin-bottom: 20px; text-transform: uppercase;
+}
+.chapter-lede {
+  color: var(--ink-2); font-size: 10pt;
+  margin: 4px 0 16px 0; line-height: 1.75;
+}
+.chapter-lede strong { color: var(--ink); font-weight: 600; }
+
+.scope-note {
+  border: 1px dashed var(--line);
+  background: var(--bg-soft);
+  padding: 8px 12px;
+  font-size: 8.5pt; color: var(--ink-3); line-height: 1.55;
+  border-radius: 3px; margin-bottom: 14px; letter-spacing: 0.3px;
+}
+.scope-note strong {
+  color: var(--gold); font-weight: 700;
+  letter-spacing: 2px; margin-right: 6px;
+}
+
+/* ========== 通用胶囊 (统计条) ========== */
+.jd-pill {
+  display: inline-block;
+  font-size: 8pt; letter-spacing: 1.5px;
+  padding: 4px 10px; margin: 0 6px 6px 0;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #fff; color: var(--ink-2); font-weight: 700;
+}
+.jd-pill.p-total { background: var(--primary); color: #fff; border-color: var(--primary); }
+.jd-pill.p-must { background: var(--danger); color: #fff; border-color: var(--danger); }
+.jd-pill.p-pref { background: var(--warning); color: #fff; border-color: var(--warning); }
+.jd-pill.p-nice { background: var(--info); color: #fff; border-color: var(--info); }
+.jd-pill.p-inf  { background: var(--ink-3); color: #fff; border-color: var(--ink-3); }
+.jd-pill.p-matched { background: var(--success); color: #fff; border-color: var(--success); }
+.jd-pill.p-weakly  { background: var(--gold); color: #fff; border-color: var(--gold); }
+.jd-pill.p-notev   { background: var(--warning); color: #fff; border-color: var(--warning); }
+.jd-pill.p-missing { background: var(--danger); color: #fff; border-color: var(--danger); }
+.jd-pill.p-high   { background: var(--danger); color: #fff; border-color: var(--danger); }
+.jd-pill.p-medium { background: var(--warning); color: #fff; border-color: var(--warning); }
+.jd-pill.p-low    { background: var(--gold); color: #fff; border-color: var(--gold); }
+.jd-pill.p-ready  { background: var(--success); color: #fff; border-color: var(--success); }
+.jd-pill.p-verify { background: var(--warning); color: #fff; border-color: var(--warning); }
+
+/* ========== 通用 tag ========== */
+.jd-tag {
+  display: inline-block;
+  font-size: 7.5pt; letter-spacing: 1px;
+  padding: 2px 7px; margin: 0 4px 4px 0;
+  border-radius: 3px;
+  background: var(--bg-soft); color: var(--ink-2);
+  border: 1px solid var(--line); font-weight: 700;
+}
+.jd-tag.t-sev.sev-high    { background: var(--danger); color: #fff; border-color: var(--danger); }
+.jd-tag.t-sev.sev-medium  { background: var(--warning); color: #fff; border-color: var(--warning); }
+.jd-tag.t-sev.sev-low     { background: var(--gold); color: #fff; border-color: var(--gold); }
+.jd-tag.t-stage { background: #fff; color: var(--primary); border-color: var(--primary-light); }
+.jd-tag.t-req   { background: #f0f4f9; color: var(--primary); border-color: #c5d4e6; font-family: Georgia, serif; }
+.jd-tag.t-rw    { background: #fdf9f0; color: var(--warning); border-color: #f0d896; font-family: Georgia, serif; }
+.jd-tag.t-ready { background: var(--success); color: #fff; border-color: var(--success); }
+.jd-tag.t-verify{ background: var(--warning); color: #fff; border-color: var(--warning); }
+
+/* ========== JD requirement type badge ========== */
+.jd-type-badge {
+  display: inline-block;
+  font-size: 7pt; letter-spacing: 1.5px;
+  padding: 2px 7px; border-radius: 2px;
+  font-weight: 700; white-space: nowrap;
+}
+.jd-type-badge.rt-must { background: var(--danger); color: #fff; }
+.jd-type-badge.rt-pref { background: var(--warning); color: #fff; }
+.jd-type-badge.rt-nice { background: var(--info); color: #fff; }
+.jd-type-badge.rt-inf  { background: var(--ink-3); color: #fff; }
+
+/* ========== Match Board status badge ========== */
+.jd-status-badge {
+  display: inline-block;
+  font-size: 7pt; letter-spacing: 1px;
+  padding: 2px 7px; border-radius: 2px;
+  font-weight: 700; white-space: nowrap;
+}
+.jd-status-badge.mb-matched { background: var(--success); color: #fff; }
+.jd-status-badge.mb-weakly  { background: var(--gold); color: #fff; }
+.jd-status-badge.mb-not-evidenced { background: var(--warning); color: #fff; }
+.jd-status-badge.mb-missing { background: var(--danger); color: #fff; }
+
+/* ========== CH01 · Fit Hero ========== */
+.jd-fit-hero {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 24px;
+  padding: 22px 24px;
+  background: linear-gradient(135deg, var(--primary) 0%, #0f2136 100%);
+  color: #fff;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+.jd-fit-left { text-align: center; border-right: 1px solid rgba(201,169,97,0.35); padding-right: 18px; }
+.jd-fit-lbl {
+  font-size: 7.5pt; letter-spacing: 3px;
+  color: var(--gold); font-weight: 600; margin-bottom: 6px;
+}
+.jd-fit-num {
+  font-family: Georgia, serif;
+  font-size: 62pt; font-weight: 700;
+  color: #fff; line-height: 1;
+  position: relative; display: inline-block;
+}
+.jd-fit-num::after {
+  content: "/100";
+  font-size: 14pt; color: rgba(255,255,255,0.5);
+  font-weight: 400; margin-left: 4px; vertical-align: super;
+}
+.jd-fit-calib {
+  font-size: 8pt;
+  color: rgba(255,255,255,0.55);
+  margin-top: 10px; letter-spacing: 0.3px;
+  line-height: 1.5;
+}
+.jd-fit-right { padding-left: 4px; }
+
+.jd-verdict-badge {
+  display: inline-block;
+  font-size: 10pt; letter-spacing: 3px;
+  padding: 8px 18px; border-radius: 4px;
+  font-weight: 700; color: #fff;
+  margin-bottom: 12px;
+}
+.jd-verdict-badge.v-submit-now  { background: var(--success); }
+.jd-verdict-badge.v-light-edit  { background: var(--gold); color: #4a3200; }
+.jd-verdict-badge.v-rewrite     { background: var(--warning); }
+.jd-verdict-badge.v-do-not      { background: var(--danger); }
+
+.jd-verdict-line {
+  font-size: 13pt; color: #fff;
+  line-height: 1.55; font-weight: 500;
+}
+
+.jd-min-actions {
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--gold);
+  background: var(--bg-card);
+  padding: 12px 18px; border-radius: 4px;
+  margin-bottom: 14px; break-inside: avoid;
+}
+.jd-min-actions h4 {
+  font-size: 9.5pt; color: var(--primary);
+  letter-spacing: 2px; margin-bottom: 6px;
+}
+.jd-min-actions ol {
+  padding-left: 20px; font-size: 10pt;
+  color: var(--ink-2); line-height: 1.7;
+}
+
+.jd-decision-note {
+  border: 1px dashed var(--line);
+  background: var(--bg-soft);
+  padding: 10px 14px; border-radius: 3px;
+  font-size: 9pt; color: var(--ink-3);
+  line-height: 1.7;
+}
+.jd-decision-note strong { color: var(--primary); font-weight: 600; }
+
+/* ========== CH02 · JD 结构化解构 ========== */
+.jd-req-summary { margin-bottom: 12px; }
+
+.jd-req-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 9pt; margin-top: 8px;
+}
+.jd-req-table th {
+  background: var(--primary); color: #fff;
+  padding: 8px 10px; text-align: left;
+  font-weight: 500; letter-spacing: 2px;
+  font-size: 8.5pt;
+}
+.jd-req-table td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top; line-height: 1.55;
+  color: var(--ink-2);
+}
+.jd-req-table td.jd-req-id {
+  font-family: Georgia, serif; font-weight: 700;
+  color: var(--gold); white-space: nowrap; width: 10%;
+}
+.jd-req-table td.jd-req-text {
+  color: var(--ink); width: 44%;
+}
+.jd-req-table td.jd-req-ev {
+  color: var(--ink-3); font-style: italic;
+  width: 36%; font-size: 8.8pt;
+}
+.jd-req-table .jd-inf-note {
+  margin-top: 4px; padding: 4px 8px;
+  background: #f3f3ee; border-left: 2px solid var(--ink-3);
+  font-size: 8pt; color: var(--ink-3); line-height: 1.5;
+  font-style: italic;
+}
+
+/* ========== CH03 · Match Board 四色矩阵 (视觉重心) ========== */
+.jd-mb-summary { margin-bottom: 12px; }
+
+.jd-match-board {
+  width: 100%; border-collapse: collapse;
+  font-size: 8.8pt; margin-top: 8px;
+  table-layout: fixed;
+}
+.jd-match-board th {
+  background: var(--primary); color: #fff;
+  padding: 8px 8px; text-align: left;
+  font-weight: 500; letter-spacing: 1.5px;
+  font-size: 8.5pt;
+}
+.jd-match-board td {
+  padding: 8px 8px;
+  vertical-align: top; line-height: 1.5;
+  color: var(--ink-2);
+  border-bottom: 1px solid var(--line);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.jd-match-board td.jd-mb-req {
+  color: var(--ink); font-weight: 600;
+  font-size: 9pt;
+}
+.jd-match-board td.jd-mb-req .jd-mb-reqid {
+  font-family: Georgia, serif;
+  font-size: 7.5pt; color: var(--gold);
+  font-weight: 700; margin-top: 2px; letter-spacing: 1px;
+}
+.jd-match-board td.jd-mb-ev {
+  font-style: italic; color: var(--ink-2);
+  font-size: 8.6pt;
+}
+.jd-match-board td.jd-mb-ev .jd-mb-empty {
+  color: var(--ink-3); font-style: normal;
+}
+.jd-match-board td.jd-mb-gap {
+  color: var(--ink); font-size: 8.6pt;
+}
+
+/* 每行按状态整格上色 —— Match Board 四色 */
+.jd-mb-row.mb-matched td { background: var(--mb-matched-bg); border-bottom-color: var(--mb-matched-line); }
+.jd-mb-row.mb-weakly td  { background: var(--mb-weakly-bg); border-bottom-color: var(--mb-weakly-line); }
+.jd-mb-row.mb-not-evidenced td { background: var(--mb-not-evidenced-bg); border-bottom-color: var(--mb-not-evidenced-line); }
+.jd-mb-row.mb-missing td { background: var(--mb-missing-bg); border-bottom-color: var(--mb-missing-line); }
+
+/* 每行左边一道颜色条 (通过第一格 border-left 实现) */
+.jd-mb-row.mb-matched td:first-child { border-left: 4px solid var(--success); }
+.jd-mb-row.mb-weakly td:first-child  { border-left: 4px solid var(--gold); }
+.jd-mb-row.mb-not-evidenced td:first-child { border-left: 4px solid var(--warning); }
+.jd-mb-row.mb-missing td:first-child { border-left: 4px solid var(--danger); }
+
+/* ========== CH04 · Blockers ========== */
+.jd-blocker-summary { margin-bottom: 14px; }
+
+/* ---- CH04 封面 · 风险分层三段汇总 ---- */
+.jd-risk-summary {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin: 18px 0 20px;
+}
+.jd-risk-tier {
+  border: 1px solid var(--line);
+  border-left: 6px solid var(--ink-3);
+  border-radius: 4px;
+  padding: 12px 16px;
+  background: #fff;
+}
+.jd-risk-tier.tier-must    { border-left-color: var(--danger); background: #fcf6f5; }
+.jd-risk-tier.tier-gap     { border-left-color: var(--gold); background: #fdf9f0; }
+.jd-risk-tier.tier-inferred{ border-left-color: var(--ink-3); background: #f7f7f6; }
+
+.jd-risk-tier .tier-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  padding-bottom: 6px; margin-bottom: 6px;
+}
+.jd-risk-tier .tier-badge {
+  font-family: Georgia, serif; letter-spacing: 0.08em;
+  font-size: 10pt; font-weight: 700; color: var(--ink);
+}
+.tier-must    .tier-badge { color: var(--danger); }
+.tier-gap     .tier-badge { color: var(--gold); }
+.tier-inferred .tier-badge { color: var(--ink-2); }
+.jd-risk-tier .tier-count {
+  font-family: Georgia, serif; font-size: 12pt; color: var(--ink);
+  font-weight: 700;
+}
+.jd-risk-tier .tier-desc {
+  font-size: 9.5pt; color: var(--ink-2); line-height: 1.5;
+  margin-bottom: 6px;
+}
+.jd-risk-tier .tier-mix { display: flex; gap: 6px; flex-wrap: wrap; }
+.jd-risk-tier .tier-mix:empty::before {
+  content: "本段暂无风险条目";
+  font-size: 9pt; color: var(--ink-3); font-style: italic;
+}
+
+.jd-risk-reading-note {
+  border-left: 3px solid var(--primary-light);
+  background: #f4f9fd;
+  padding: 10px 14px;
+  font-size: 9.5pt; line-height: 1.65; color: var(--ink-2);
+  border-radius: 0 3px 3px 0;
+}
+.jd-risk-reading-note strong { color: var(--primary); }
+
+/* tier-* 变体 (在 jd-blocker-card 上作为增益样式, 与 sev-* 组合) */
+.jd-blocker-card.tier-gap { border-left-color: var(--gold); background: #fdf9f0; }
+.jd-blocker-card.tier-gap.sev-high   { border-left-color: var(--warning); background: #fdf5eb; }
+.jd-blocker-card.tier-gap.sev-medium { border-left-color: var(--gold); background: #fdf9f0; }
+.jd-blocker-card.tier-gap.sev-low    { border-left-color: var(--info); background: #f4f9fd; }
+
+/* Tier 3 · 推断卡片 (低视觉权重) */
+.jd-inferred-card {
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--ink-3);
+  background: #f7f7f6;
+  border-radius: 4px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+}
+.jd-inferred-card.conf-medium { border-left-color: var(--info); background: #f2f6fb; }
+.jd-inferred-card.conf-low    { border-left-color: var(--ink-3); background: #f7f7f6; }
+.jd-inferred-card .jd-bl-title {
+  font-size: 11.5pt; font-weight: 600;
+}
+.jd-tag.t-conf.conf-medium { background: var(--info); color: #fff; border-color: var(--info); }
+.jd-tag.t-conf.conf-low    { background: #fff; color: var(--ink-2); border-color: var(--ink-3); }
+
+.jd-blocker-card {
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--danger);
+  background: #fcf6f5;
+  border-radius: 4px;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+}
+.jd-blocker-card.sev-medium { border-left-color: var(--warning); background: #fdf9f0; }
+.jd-blocker-card.sev-low    { border-left-color: var(--info); background: #f4f9fd; }
+
+.jd-bl-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  padding-bottom: 8px; margin-bottom: 8px;
+}
+.jd-bl-title {
+  font-size: 12.5pt; color: var(--ink);
+  font-weight: 600; line-height: 1.45; flex: 1;
+}
+.jd-bl-tags { display: flex; flex-shrink: 0; gap: 4px; flex-wrap: wrap; max-width: 45%; justify-content: flex-end; }
+
+.jd-bl-row {
+  display: grid;
+  grid-template-columns: 76px 1fr;
+  gap: 12px;
+  padding: 4px 0;
+  align-items: baseline;
+}
+.jd-bl-lbl {
+  font-size: 8pt; color: var(--gold);
+  letter-spacing: 2px; font-weight: 700;
+  padding-top: 2px;
+}
+.jd-bl-val {
+  font-size: 10pt; color: var(--ink-2); line-height: 1.65;
+}
+.jd-bl-linked {
+  margin-top: 8px; font-size: 9pt;
+  color: var(--primary); font-style: italic;
+  padding: 4px 8px; background: rgba(30,58,95,0.05);
+  border-radius: 3px;
+}
+.jd-bl-linked strong { font-family: Georgia, serif; color: var(--gold); }
+
+/* ========== CH05 · 优势放大清单 ========== */
+.jd-strength-list {
+  list-style: none; padding: 0; margin-top: 8px;
+}
+.jd-strength-item {
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  gap: 14px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  background: linear-gradient(90deg, #fbf7ea 0%, #fff 100%);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--gold);
+  border-radius: 3px;
+  align-items: center;
+  break-inside: avoid;
+}
+.jd-strength-mark {
+  font-family: Georgia, serif;
+  font-size: 18pt; font-weight: 700;
+  color: var(--gold); line-height: 1; text-align: center;
+}
+.jd-strength-body {
+  font-size: 10.5pt; color: var(--ink);
+  line-height: 1.6;
+}
+
+/* 空态徽章 */
+.jd-empty-badge {
+  display: flex; align-items: center; gap: 16px;
+  padding: 22px 24px; margin-top: 18px;
+  background: #f4faf6;
+  border: 1px solid #b8dcc5;
+  border-radius: 6px;
+}
+.jd-empty-badge.muted {
+  background: var(--bg-soft);
+  border-color: var(--line);
+}
+.jd-empty-icon {
+  font-family: Georgia, serif;
+  font-size: 34pt; font-weight: 700;
+  color: var(--success); line-height: 1;
+  width: 60px; height: 60px;
+  border: 2px solid var(--success);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.jd-empty-title {
+  font-size: 13pt; color: var(--primary);
+  font-weight: 600; letter-spacing: 2px; margin-bottom: 6px;
+}
+.jd-empty-sub {
+  font-size: 10pt; color: var(--ink-2); line-height: 1.65;
+}
+
+/* ========== CH06 · Rewrite Cards ========== */
+.jd-rw-summary { margin-bottom: 12px; }
+
+.jd-rw-card {
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--success);
+  background: #fff;
+  border-radius: 4px;
+  padding: 14px 18px;
+  margin-bottom: 12px;
+}
+.jd-rw-card.rw-verify { border-left-color: var(--warning); }
+
+.jd-rw-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: 12px;
+  padding-bottom: 8px; margin-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+.jd-rw-title { flex: 1; }
+.jd-rw-id {
+  display: inline-block;
+  font-family: Georgia, serif;
+  font-size: 12pt; font-weight: 700;
+  color: var(--gold); margin-right: 10px;
+}
+.jd-rw-section {
+  font-size: 11pt; color: var(--ink);
+  font-weight: 600;
+}
+.jd-rw-tags {
+  display: flex; flex-wrap: wrap; gap: 4px;
+  justify-content: flex-end; flex-shrink: 0;
+  max-width: 55%;
+}
+
+.jd-rw-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 8px 0;
+}
+.jd-rw-side {
+  padding: 10px 12px;
+  border-radius: 3px;
+  font-size: 9.8pt; line-height: 1.65;
+}
+.jd-rw-before {
+  background: #fcf1ef;
+  border: 1px solid #f0c4bd;
+}
+.jd-rw-after {
+  background: #f0f7f3;
+  border: 1px solid #b8dcc5;
+}
+.jd-rw-side-lbl {
+  font-size: 7.5pt; font-weight: 700;
+  letter-spacing: 2px; margin-bottom: 6px; display: block;
+}
+.jd-rw-before .jd-rw-side-lbl { color: var(--danger); }
+.jd-rw-after .jd-rw-side-lbl { color: var(--success); }
+.jd-rw-side-body {
+  color: var(--ink);
+}
+
+.jd-rw-evidence {
+  background: #fff8ea;
+  border: 1px solid #f0d896;
+  border-radius: 3px;
+  padding: 8px 12px; margin: 8px 0;
+}
+.jd-rw-ev-title {
+  font-size: 8pt; color: var(--warning);
+  letter-spacing: 2px; font-weight: 700; margin-bottom: 4px;
+}
+.jd-rw-evidence ul {
+  padding-left: 18px;
+  font-size: 9pt; color: var(--ink-2); line-height: 1.6;
+}
+
+.jd-rw-anchor {
+  margin-top: 8px; padding: 6px 12px;
+  background: rgba(30,58,95,0.04);
+  border-left: 2px solid var(--primary);
+  font-size: 9.5pt; color: var(--primary);
+  line-height: 1.55; font-weight: 500;
+  border-radius: 2px;
+}
+.jd-rw-anchor-lbl {
+  font-size: 7.5pt; color: var(--gold);
+  letter-spacing: 2px; font-weight: 700; margin-right: 6px;
+}
+
+/* ========== CH07 · Evidence Collection ========== */
+.jd-evidence-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 9pt; margin-top: 8px;
+  table-layout: fixed;
+}
+.jd-evidence-table th {
+  background: var(--primary); color: #fff;
+  padding: 8px 10px; text-align: left;
+  font-weight: 500; letter-spacing: 2px;
+  font-size: 8.5pt;
+}
+.jd-evidence-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top; line-height: 1.5;
+  color: var(--ink-2);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.jd-evidence-table td.jd-ev-id {
+  font-family: Georgia, serif; font-weight: 700;
+  color: var(--gold); white-space: nowrap;
+}
+.jd-evidence-table td.jd-ev-ask { color: var(--ink); }
+.jd-evidence-table td.jd-ev-linked { font-size: 8pt; }
+.jd-evidence-table td.jd-ev-where { color: var(--ink-3); font-style: italic; font-size: 8.6pt; }
+
+.jd-ev-row.sev-high td { background: #fdf1ef; }
+.jd-ev-row.sev-high td:first-child { border-left: 3px solid var(--danger); }
+.jd-ev-row.sev-medium td { background: #fdf9f0; }
+.jd-ev-row.sev-medium td:first-child { border-left: 3px solid var(--warning); }
+.jd-ev-row.sev-low td:first-child { border-left: 3px solid var(--gold); }
+
+/* ========== CH08 · Cover Letter Angle ========== */
+.jd-cover-letter {
+  margin-top: 16px;
+}
+.jd-cl-block {
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  background: linear-gradient(180deg, #fdfaf1 0%, #fff 100%);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--gold);
+  border-radius: 4px;
+}
+.jd-cl-stage {
+  font-size: 8pt; letter-spacing: 3px;
+  color: var(--gold); font-weight: 700;
+  margin-bottom: 8px;
+}
+.jd-cl-body {
+  font-size: 11pt; color: var(--ink);
+  line-height: 1.85;
+  font-family: Georgia, "Times New Roman", "PingFang SC", serif;
+}
+.jd-cl-tip {
+  margin-top: 10px; padding: 8px 12px;
+  border: 1px dashed var(--line);
+  background: var(--bg-soft);
+  font-size: 8.5pt; color: var(--ink-3);
+  line-height: 1.55; border-radius: 3px;
+  font-style: italic;
+}
+.jd-cl-tip strong { color: var(--primary); font-weight: 600; font-style: normal; }
+
+/* ========== CH09 · Interview Preparation ========== */
+.jd-iq-card {
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--primary);
+  background: linear-gradient(90deg, var(--bg-soft) 0%, #fff 100%);
+  border-radius: 3px;
+  padding: 14px 18px;
+  margin-bottom: 12px;
+}
+.jd-iq-q {
+  font-size: 11.5pt; color: var(--primary);
+  font-weight: 600; line-height: 1.5; margin-bottom: 8px;
+}
+.jd-iq-q::before {
+  content: "Q";
+  color: var(--gold);
+  font-family: Georgia, serif;
+  font-size: 15pt; font-weight: 700;
+  margin-right: 8px;
+}
+.jd-iq-why {
+  font-size: 9.5pt; color: var(--ink-2);
+  line-height: 1.6; padding: 4px 0;
+}
+.jd-iq-lbl {
+  display: inline-block;
+  font-size: 7.5pt; color: var(--gold);
+  letter-spacing: 2px; font-weight: 700;
+  margin-right: 6px; vertical-align: middle;
+}
+.jd-iq-lbl-row {
+  font-size: 7.5pt; color: var(--gold);
+  letter-spacing: 2px; font-weight: 700;
+  margin-top: 6px; margin-bottom: 2px;
+}
+.jd-iq-framework {
+  padding-left: 20px; margin: 2px 0;
+  font-size: 9.5pt; color: var(--ink-2); line-height: 1.6;
+}
+.jd-iq-facts {
+  padding-left: 20px; margin: 2px 0;
+  font-size: 9pt; color: var(--ink-2); line-height: 1.55;
+}
+.jd-iq-avoid {
+  background: #fcf1ef;
+  border-left: 2px solid var(--danger);
+  padding: 5px 10px;
+  margin-top: 6px;
+  font-size: 9pt; color: var(--ink-2);
+  line-height: 1.5;
+  border-radius: 2px;
+}
+.jd-iq-avoid strong {
+  color: var(--danger); font-size: 8pt;
+  letter-spacing: 2px; margin-right: 4px;
+}
+
+/* ========== 主编寄语 ========== */
+.final-words {
+  margin-top: 20px;
+  padding: 30px 32px;
+  background: linear-gradient(135deg, var(--primary) 0%, #0f2136 100%);
+  color: #fff;
+  border-radius: 6px;
+  line-height: 1.9; font-size: 12pt;
+  position: relative;
+}
+.final-words::before {
+  content: "\201C";
+  font-size: 60pt; color: var(--gold);
+  font-family: Georgia, serif;
+  position: absolute; top: -10px; left: 20px;
+  opacity: 0.5;
+}
+.final-words .signature {
+  margin-top: 20px; text-align: right;
+  font-size: 9pt; color: var(--gold-light); letter-spacing: 3px;
+}
+
+/* ========== 尾页 ========== */
+.end-page {
+  background:
+    radial-gradient(circle at 20% 15%, rgba(201,169,97,0.15) 0%, transparent 40%),
+    radial-gradient(circle at 85% 88%, rgba(201,169,97,0.1) 0%, transparent 45%),
+    linear-gradient(200deg, #0a1727 0%, #142748 55%, #1e3a5f 100%);
+  color: #fff;
+  height: 297mm;
+  padding: 0 0 6mm 0;
+  display: block;
+  position: relative; overflow: hidden;
+}
+.end-top {
+  padding: 10mm 22mm 0 22mm;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 8pt; letter-spacing: 4px;
+  color: rgba(255,255,255,0.5); z-index: 2;
+}
+.end-top .end-mark {
+  color: var(--gold); letter-spacing: 6px; font-weight: 600;
+}
+.end-hero {
+  padding: 8mm 22mm 0 22mm;
+  text-align: center; z-index: 2; position: relative;
+}
+.end-hero .thank {
+  font-size: 8pt; letter-spacing: 8px;
+  color: var(--gold); margin-bottom: 10px; font-weight: 500;
+}
+.end-hero .end-brand {
+  font-size: 52pt; font-weight: 700; letter-spacing: 8px;
+  color: #fff; margin-bottom: 4px;
+  font-family: Georgia, serif; line-height: 1;
+}
+.end-hero .end-slogan {
+  font-size: 8pt; letter-spacing: 5px;
+  color: var(--gold-light); margin-bottom: 10px; font-weight: 300;
+}
+.end-hero .end-line {
+  width: 48px; height: 2px; background: var(--gold);
+  margin: 0 auto 10px auto;
+}
+.end-hero .end-copy {
+  font-size: 10pt; color: rgba(255,255,255,0.75);
+  line-height: 1.95; letter-spacing: 1px; font-weight: 300;
+}
+.end-scope-note {
+  padding: 0 22mm;
+  margin-top: 14mm;
+  font-size: 7pt; color: rgba(255,255,255,0.4);
+  line-height: 1.7; letter-spacing: 0.5px;
+  z-index: 2; position: relative;
+  text-align: center; font-style: italic;
+}
+.end-foot {
+  margin: 8mm 22mm 8mm 22mm;
+  padding: 10px 0 0 0;
+  border-top: 1px solid rgba(201,169,97,0.25);
+  display: flex; justify-content: space-between; gap: 30px;
+  z-index: 2; position: relative;
+}
+.end-foot .ef-lbl {
+  font-size: 7pt; letter-spacing: 4px;
+  color: var(--gold); margin-bottom: 4px; font-weight: 600;
+}
+.end-foot .ef-txt {
+  font-size: 8.5pt; color: rgba(255,255,255,0.6);
+  line-height: 1.6; letter-spacing: 0.5px;
+}
+.end-foot .end-foot-r { text-align: right; }

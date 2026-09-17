@@ -1,0 +1,314 @@
+{
+  "meta": {
+    "brand": "Toivo",
+    "product_line": "career",
+    "product_name": "JD 定制简历策略报告",
+    "series_no": "02",
+    "candidate_name": "赵天宇",
+    "target_role": "后端开发工程师",
+    "target_company": "字节跳动",
+    "candidate_stage": "3-5 年",
+    "scope_disclaimer": ""
+  },
+
+  "submit_decision": {
+    "verdict": "submit_after_light_edit",
+    "fit_score": 68,
+    "score_calibration": "本分数评估的是简历与本 JD 的呈现层匹配度, 不评估候选人实际技术能力。",
+    "one_line_verdict": "整体在合格线以上, 但 Kafka 叙事需要在投递前 30 分钟内做定向改写, 否则会在筛简历环节被跳过。",
+    "minimum_actions_before_submit": [
+      "把 Kafka 名词列举改写为链路描述 (见 RW-01)",
+      "补齐 P0 服务稳定性建设经验的一个具体案例 (见 RW-02)",
+      "在个人技术亮点里前置 分布式一致性 相关关键词"
+    ]
+  },
+
+  "jd_requirements": [
+    {
+      "id": "REQ-01",
+      "requirement": "熟悉 Kafka / RocketMQ 等消息中间件, 有消息驱动架构落地经验",
+      "requirement_type": "must_have",
+      "jd_evidence": "任职要求第 3 条: 「熟悉 Kafka / RocketMQ 等消息中间件」",
+      "inference_note": ""
+    },
+    {
+      "id": "REQ-02",
+      "requirement": "5 年及以上 Go / Java 后端工程经验",
+      "requirement_type": "must_have",
+      "jd_evidence": "任职要求第 1 条: 「5 年以上 Go 或 Java 后端开发经验」",
+      "inference_note": ""
+    },
+    {
+      "id": "REQ-03",
+      "requirement": "有 P0 服务稳定性建设与线上故障处理经验",
+      "requirement_type": "preferred",
+      "jd_evidence": "任职要求第 4 条: 「有大型分布式系统稳定性保障经验优先」",
+      "inference_note": ""
+    },
+    {
+      "id": "REQ-04",
+      "requirement": "熟悉分布式一致性协议 (Raft / Paxos)",
+      "requirement_type": "nice_to_have",
+      "jd_evidence": "任职要求第 6 条: 「熟悉 Raft / Paxos 等一致性协议加分」",
+      "inference_note": ""
+    },
+    {
+      "id": "REQ-05",
+      "requirement": "具备高并发场景下的架构演进经验",
+      "requirement_type": "inferred_from_context",
+      "jd_evidence": "岗位描述: 「负责核心交易链路的架构演进」",
+      "inference_note": "JD 强调 核心交易链路 与 架构演进 —— 交易类核心链路本质上属于高并发场景, 因此把 高并发架构演进经验 作为一条隐式要求引入; 但 JD 未明写具体量级, 故不推 具体阈值。",
+      "inference_confidence": "medium"
+    },
+    {
+      "id": "REQ-06",
+      "requirement": "具备跨团队协作与技术方案评审推进能力",
+      "requirement_type": "preferred",
+      "jd_evidence": "任职要求第 5 条: 「较强的跨团队沟通与推进能力」",
+      "inference_note": ""
+    }
+  ],
+
+  "match_board": {
+    "context": "本 Match Board 基于用户提交的这份 JD 与本简历原文, 逐条对齐 JD 的显式与隐式要求, 不代表通用画像。",
+    "items": [
+      {
+        "jd_requirement_id": "REQ-01",
+        "jd_requirement": "熟悉 Kafka / RocketMQ 等消息中间件, 有消息驱动架构落地经验",
+        "requirement_type": "must_have",
+        "status": "weakly_matched",
+        "resume_evidence": "技能栈: 「熟练 Kafka、Redis、MySQL」",
+        "gap_note": "简历只列了 Kafka 名词, 未体现消息驱动架构的链路设计、消费模式或失败补偿, 筛简历环节会被质疑深度。"
+      },
+      {
+        "jd_requirement_id": "REQ-02",
+        "jd_requirement": "5 年及以上 Go / Java 后端工程经验",
+        "requirement_type": "must_have",
+        "status": "matched",
+        "resume_evidence": "工作经历: 「2021.07-2026.06 阿里云 · 后端开发工程师」共 5 年",
+        "gap_note": "年限与语言栈匹配, 无需额外证明。"
+      },
+      {
+        "jd_requirement_id": "REQ-03",
+        "jd_requirement": "有 P0 服务稳定性建设与线上故障处理经验",
+        "requirement_type": "preferred",
+        "status": "not_evidenced",
+        "resume_evidence": "",
+        "gap_note": "简历没写稳定性建设经历。候选人可能有 (工业视觉平台是 P0 服务), 但目前呈现层看不到, 需要在改写卡里补一段。"
+      },
+      {
+        "jd_requirement_id": "REQ-04",
+        "jd_requirement": "熟悉分布式一致性协议 (Raft / Paxos)",
+        "requirement_type": "nice_to_have",
+        "status": "missing",
+        "resume_evidence": "",
+        "gap_note": "简历完全未提, 且候选人经历集中在业务后端而非基础中间件, 判定为真实缺失。不建议为此硬凑。"
+      },
+      {
+        "jd_requirement_id": "REQ-05",
+        "jd_requirement": "具备高并发场景下的架构演进经验",
+        "requirement_type": "inferred_from_context",
+        "status": "weakly_matched",
+        "resume_evidence": "项目经历: 「主导工业视觉平台核心接口性能优化」",
+        "gap_note": "简历提到性能优化, 但无量化, 无法判定是否覆盖 JD 隐含的高并发场景, 属于推断层信号。"
+      },
+      {
+        "jd_requirement_id": "REQ-06",
+        "jd_requirement": "具备跨团队协作与技术方案评审推进能力",
+        "requirement_type": "preferred",
+        "status": "matched",
+        "resume_evidence": "项目经历: 「牵头联合视觉算法组、设备组完成技术评审」",
+        "gap_note": "简历有明确跨团队推进证据, 可在自荐信中前置放大。"
+      }
+    ]
+  },
+
+  "must_have_blockers": [
+    {
+      "jd_requirement_id": "REQ-01",
+      "problem": "Kafka 停留在名词列举, 无链路设计描述",
+      "severity": "high",
+      "impact_stage": "screening",
+      "impact_explanation": "本 JD 明确要求 Kafka 消息驱动架构落地经验, 简历里 Kafka 只出现在技能栈行中, 一二线技术筛简历官通常在这里会 3 秒跳过, 因为看不到 消费模式 / 失败补偿 / 幂等设计 等硬指标。",
+      "recommended_action": "把工业视觉平台一段的 bullet 2 改写为消息驱动架构口径, 明确 producer / consumer group / DLQ 处理",
+      "linked_rewrite_card_id": "RW-01"
+    }
+  ],
+
+  "priority_gaps": [
+    {
+      "jd_requirement_id": "REQ-03",
+      "problem": "P0 稳定性建设经历未在简历中呈现",
+      "severity": "medium",
+      "impact_stage": "phone_screen",
+      "impact_explanation": "本条 JD 标注为 优先项 (稳定性保障优先), 不阻投但在竞争中会掉分; 电面阶段面试官若按优先项逐条追问, 现有简历给不出锚点, 会影响候选人在同批候选池里的相对位置。",
+      "recommended_action": "补一条 一次线上故障的止损与复盘 bullet, 引用具体故障类型和 MTTR",
+      "linked_rewrite_card_id": "RW-02"
+    },
+    {
+      "jd_requirement_id": "REQ-04",
+      "problem": "一致性协议 (Raft / Paxos) 在简历中未出现",
+      "severity": "low",
+      "impact_stage": "onsite",
+      "impact_explanation": "本条属于 nice_to_have, 不覆盖也可以投; 但终面若被问到, 现有简历不提示这方面兴趣, 会让面试官默认候选人偏业务栈。",
+      "recommended_action": "个人技术亮点里加一句 对一致性协议原理有系统学习 (仅在候选人确实有此学习经历时添加)",
+      "linked_rewrite_card_id": ""
+    }
+  ],
+
+  "inferred_risks": [
+    {
+      "jd_requirement_id": "REQ-05",
+      "risk_note": "JD 上下文暗示岗位面对高并发场景, 简历未量化性能优化的量级, 面试可能被追问",
+      "confidence": "medium",
+      "verify_hint": "投递前从监控系统拉取项目在生产环境的峰值请求量, 心里有具体数字即可, 不需要一定写进简历",
+      "linked_rewrite_card_id": "RW-01"
+    }
+  ],
+
+  "strengths_to_amplify": [
+    "5 年 Go 工程经验, 与 JD 年限硬门槛正好对齐, 应在个人信息栏首行前置",
+    "跨团队推进能力有具体项目锚点, 可以在自荐信中作为软实力主线",
+    "工业视觉平台是完整业务闭环项目, 具备做深度改写的原材料 (只是当前呈现层没打开)"
+  ],
+
+  "rewrite_cards": [
+    {
+      "id": "RW-01",
+      "resume_section": "阿里云 · 工业视觉平台 · bullet 2",
+      "original_text": "熟练使用 Kafka 处理业务消息, 保证系统解耦。",
+      "targets_requirement_ids": ["REQ-01", "REQ-05"],
+      "rewrite_type": "needs_verification",
+      "rewritten_text": "基于 Kafka 打通 工单 - 控制线图 - 反馈 的三向消息驱动链路, 承接 [待确认: 峰值 QPS 或日均消息量] 的核心消费流量, 通过 [待确认: 具体保护策略, 如死信队列 / 幂等消费 / 分区再均衡策略] 处理 broker 抖动与消费重复, 使端到端消息成功率稳定在 [待确认: 具体 SLA 数值]。",
+      "evidence_needed": [
+        "峰值 QPS 数据可从阿里云监控系统 (ARMS 或 SLS) 拉取",
+        "具体保护策略需要与前 mentor 或架构文档核对",
+        "端到端成功率 SLA 应有历史周报或大盘截图为证"
+      ],
+      "interview_anchor": "Kafka 消费失败时的补偿策略具体怎么设计的? 幂等键怎么选?"
+    },
+    {
+      "id": "RW-02",
+      "resume_section": "阿里云 · 工业视觉平台 · bullet 5 (新增)",
+      "original_text": "(简历中暂无此 bullet)",
+      "targets_requirement_ids": ["REQ-03"],
+      "rewrite_type": "needs_verification",
+      "rewritten_text": "作为该 P0 服务的一线负责人, 主导 [待确认: 具体故障类型, 如消息积压 / DB 主从延迟] 的止损与复盘, 建立分级熔断与容量水位巡检机制, 使季度故障 MTTR 从 [待确认: 优化前分钟数] 降至 [待确认: 优化后分钟数]。",
+      "evidence_needed": [
+        "具体故障类型与时间点, 可从故障复盘文档或 oncall 记录中提取",
+        "MTTR 前后数值应有稳定性周报或故障总结存档",
+        "熔断/巡检机制需引用具体组件名 (如 Sentinel / 自研巡检脚本)"
+      ],
+      "interview_anchor": "分级熔断的判定阈值怎么定的? 误熔断怎么防?"
+    },
+    {
+      "id": "RW-03",
+      "resume_section": "个人技术亮点 · 首段",
+      "original_text": "熟悉主流后端技术栈, 具备大型项目落地能力。",
+      "targets_requirement_ids": ["REQ-02", "REQ-06"],
+      "rewrite_type": "ready_to_use",
+      "rewritten_text": "5 年 Go 后端工程经验, 主导过跨视觉算法组 / 设备组的 P0 平台架构演进, 擅长在多方约束下把技术方案推到评审通过并落地上线。",
+      "evidence_needed": [],
+      "interview_anchor": "你在跨组评审里最难推的一次决策是什么? 如何达成一致的?"
+    }
+  ],
+
+  "evidence_collection": {
+    "context": "投递前候选人应主动补齐或核实的信息清单。每条都指向具体的 JD 要求或改写卡, 以避免面试时空口说。",
+    "items": [
+      {
+        "id": "EV-01",
+        "ask": "拉取工业视觉平台过去 30 天 Kafka 消费峰值 QPS 与消费成功率",
+        "linked_requirement_ids": ["REQ-01", "REQ-05"],
+        "linked_rewrite_card_ids": ["RW-01"],
+        "where_to_get": "阿里云 ARMS 监控大盘或 SLS 日志查询",
+        "priority": "high"
+      },
+      {
+        "id": "EV-02",
+        "ask": "整理一次线上故障的时间线、根因、止损动作与 MTTR",
+        "linked_requirement_ids": ["REQ-03"],
+        "linked_rewrite_card_ids": ["RW-02"],
+        "where_to_get": "oncall 复盘文档或团队 wiki 的故障总结页",
+        "priority": "high"
+      },
+      {
+        "id": "EV-03",
+        "ask": "确认 Kafka 消费端幂等策略的具体实现 (业务字段 or 分布式锁)",
+        "linked_requirement_ids": ["REQ-01"],
+        "linked_rewrite_card_ids": ["RW-01"],
+        "where_to_get": "阅读工业视觉平台的 consumer 代码或询问前 mentor",
+        "priority": "medium"
+      },
+      {
+        "id": "EV-04",
+        "ask": "准备一段 3 分钟版的跨团队推进故事, 用 STAR 结构",
+        "linked_requirement_ids": ["REQ-06"],
+        "linked_rewrite_card_ids": ["RW-03"],
+        "where_to_get": "自身项目回忆 + 与前主管确认时间线",
+        "priority": "low"
+      }
+    ]
+  },
+
+  "cover_letter_angle": {
+    "hook": "看到贵司交易中台在做核心链路的架构演进, 这正是过去 3 年我在工业视觉平台上做的事 —— 只是场景不同。",
+    "positioning": "我的技术主线是 Go + Kafka 的消息驱动架构落地, 附带跨团队推进 P0 服务稳定性的实战经验; 相比全能候选人, 我在 消息驱动 + 稳定性 这两个 JD 明确要求的点上密度更高。",
+    "closing": "希望能有一次 30 分钟的深入交流, 我可以带具体的 Kafka 链路设计文档与故障复盘案例, 直接讨论贵司交易场景下的选型取舍。"
+  },
+
+  "interview_preparation": [
+    {
+      "question": "你在 Kafka 消费端遇到过消息积压吗? 具体怎么处理的?",
+      "why_it_will_be_asked": "简历改写后会前置 Kafka 消息驱动架构 关键词 (见 RW-01), 面试官必然追问真实经验; 且 JD 任职要求第 3 条明确指向消息中间件深度。",
+      "answer_framework": [
+        "先用 30 秒描述一次真实的积压场景 (触发条件、峰值倍数、监控告警时间点)",
+        "解释根因定位路径: 先看 lag、再看 consumer group 状态、最后看 broker 侧",
+        "讲你实际采取的动作 (扩 partition / 临时扩 consumer / 兜底降级), 说明取舍",
+        "结论: 事后做了什么长期机制来防止复发"
+      ],
+      "facts_to_prepare": [
+        "至少一次真实积压事件的时间点与峰值量级",
+        "扩 partition 与扩 consumer 的先后顺序及原因",
+        "长期机制的具体名字与代码位置"
+      ],
+      "avoid_saying": "不要说 我们直接扩机器就好了, 面试官会追问为什么不改消费模型, 显得对问题理解浅。"
+    },
+    {
+      "question": "P0 服务的稳定性水位巡检具体巡什么? 阈值怎么定?",
+      "why_it_will_be_asked": "RW-02 改写卡引入了 分级熔断与容量水位巡检 描述, 面试官会精确追问巡检项与阈值, 检验是否真做过。",
+      "answer_framework": [
+        "先说清 4 类核心指标: RT / 错误率 / 资源水位 / 依赖健康度",
+        "每类举一个具体巡检项与它的告警阈值来源 (业务经验值 or SLO)",
+        "解释误报与漏报之间的权衡: 你是怎么取舍的",
+        "补充: 巡检发现异常后, 自动化响应做到哪一步"
+      ],
+      "facts_to_prepare": [
+        "4 类核心指标各自的巡检项与阈值",
+        "一个具体误报案例与你之后的阈值调整",
+        "自动化响应的组件名 (Sentinel / 自研 / 报警值班机器人)"
+      ],
+      "avoid_saying": "不要说 阈值是拍脑袋定的, 也不要说 我们全都看监控, 都会让面试官怀疑是否真设计过巡检体系。"
+    },
+    {
+      "question": "跨团队推进技术评审, 遇到过强烈分歧时你是怎么达成一致的?",
+      "why_it_will_be_asked": "简历 RW-03 前置了跨团队推进能力, JD 任职要求第 5 条明确要求; 且这是软技能面必问项。",
+      "answer_framework": [
+        "选一个真实且有分歧的评审场景 (对方是谁, 分歧点是什么)",
+        "描述你如何界定问题的技术边界与业务代价",
+        "讲你用什么手段推动 (数据 / 试点 / 上级仲裁), 为什么选这个手段",
+        "结果与你从中学到的一个原则"
+      ],
+      "facts_to_prepare": [
+        "至少 2 个不同类型的分歧样本 (技术选型 vs 排期 vs 边界划分)",
+        "对方的观点是什么, 你复述时要能站在对方立场说清",
+        "推动手段的具体动作 (会议纪要 / 试点方案 / 数据对比表)"
+      ],
+      "avoid_saying": "不要说 最后领导拍板, 会显得你没有推动能力; 也不要说 我说服了大家, 显得傲慢。"
+    }
+  ],
+
+  "final_words": "整体来说, 你和这份 JD 之间的距离主要不是能力距离, 而是叙事距离 —— 你的经历本身覆盖了 JD 的大部分要求, 但简历目前没有把这些经历讲成招聘视角能一眼识别的样子。投递前 30 分钟做的事很简单: 把 Kafka 那一行改成 RW-01, 补一条 RW-02, 前置 RW-03 到亮点栏。做完这三件事再投, 会有明显区别。",
+
+  "privacy_and_scope_note": ""
+}

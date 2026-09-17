@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ data.meta.candidate_name }} · JD 定制简历策略 · Toivo Career</title>
+  <link rel="stylesheet" href="report.css">
+</head>
+<body>
+
+{# ============================================================
+   Toivo Career · JD Targeted Resume Strategy Report · V1
+   顺序: 封面 → 目录
+        → CH01 投递判断 (fit_score + verdict)
+        → CH02 JD 结构化解构
+        → CH03 Match Board 四色矩阵 (核心)
+        → CH04 Must-Have Blockers
+        → CH05 优势放大清单
+        → CH06 Rewrite Cards (1-2 张/页)
+        → CH07 Evidence Collection
+        → CH08 Cover Letter Angle
+        → CH09 Interview Preparation (1-2 题/页)
+        → 主编寄语
+        → 尾页
+   ============================================================ #}
+
+{% macro pn(key) -%}
+{%- if toc_pages and toc_pages.get(key) -%}{{ '%02d' | format(toc_pages[key]) }}{%- else -%}—{%- endif -%}
+{%- endmacro %}
+
+{# ---- 映射字典 (章节级复用) ---- #}
+{% set verdict_class = {
+  'submit_now':'v-submit-now',
+  'submit_after_light_edit':'v-light-edit',
+  'submit_after_rewrite':'v-rewrite',
+  'do_not_submit':'v-do-not'
+} %}
+{% set verdict_label = {
+  'submit_now':'SUBMIT NOW · 可立即投递',
+  'submit_after_light_edit':'LIGHT EDIT · 小改后可投',
+  'submit_after_rewrite':'REWRITE · 需实质修订后再投',
+  'do_not_submit':'DO NOT SUBMIT · 不建议投递'
+} %}
+{% set req_type_class = {
+  'must_have':'rt-must',
+  'preferred':'rt-pref',
+  'nice_to_have':'rt-nice',
+  'inferred_from_context':'rt-inf'
+} %}
+{% set req_type_label = {
+  'must_have':'MUST',
+  'preferred':'PREF',
+  'nice_to_have':'NICE',
+  'inferred_from_context':'INFER'
+} %}
+{% set status_class = {
+  'matched':'mb-matched',
+  'weakly_matched':'mb-weakly',
+  'not_evidenced':'mb-not-evidenced',
+  'missing':'mb-missing'
+} %}
+{% set status_label = {
+  'matched':'MATCHED · 已支撑',
+  'weakly_matched':'WEAKLY · 有边缘信号',
+  'not_evidenced':'NOT EVIDENCED · 未落笔',
+  'missing':'MISSING · 缺失'
+} %}
+{% set severity_class = {'high':'sev-high','medium':'sev-medium','low':'sev-low'} %}
+{% set severity_label = {'high':'HIGH','medium':'MEDIUM','low':'LOW'} %}
+{% set stage_label = {
+  'screening':'初筛',
+  'phone_screen':'电面',
+  'onsite':'终面',
+  'offer':'谈 Offer'
+} %}
+
+<!-- ============ 01 · 封面 ============ -->
+<section class="page cover" data-chapter="cover">
+  <div class="cover-top">
+    <div class="cover-mark">TOIVO · CAREER</div>
+    <div class="cover-issue">ISSUE Nº TVC-{{ report_no }}</div>
+  </div>
+
+  <div class="cover-inner">
+    <div class="cover-serial">SERIES {{ data.meta.series_no }} · JD TARGETED STRATEGY</div>
+    <div class="brand-logo">Toivo</div>
+    <div class="brand-slogan">CAREER DOCUMENTS · INTERVIEW READINESS · PROFESSIONAL NARRATIVE</div>
+    <div class="divider"></div>
+
+    <div class="report-name">{{ data.meta.product_name }}</div>
+    <div class="report-sub">
+      JD TARGETED · 针对本份岗位的投递策略
+    </div>
+
+    <div class="candidate">
+      <div class="candidate-lbl">FOR / 本册专属于</div>
+      <div class="name">{{ data.meta.candidate_name }}</div>
+      <div class="jd-cover-target">
+        <span class="lbl">TARGET</span>
+        {{ data.meta.target_role }}{% if data.meta.target_company %} · {{ data.meta.target_company }}{% endif %}
+      </div>
+    </div>
+
+    {# ---- Phase 0 · SKU 边界声明 (打在首页, 不留退路) ---- #}
+    <div class="cover-scope-boundary">
+      <div class="scope-boundary-title">SCOPE OF THIS REPORT · 本册交付边界</div>
+      <div class="scope-boundary-body">
+        本报告输出 <strong>投递策略 + 可替换文案</strong>, 判断基准只有本次提交的 JD 原文与简历原文;
+        当前版本 <strong>不生成最终简历文件</strong>, 不含背景调查、征信、社交媒体或第三方数据。
+      </div>
+    </div>
+  </div>
+
+  <div class="cover-footer">
+    <div class="cover-foot-l">
+      <div class="foot-lbl">TOIVO CAREER · EST. 2026</div>
+      <div class="foot-sub">A JD-SPECIFIC STRATEGY FOR YOUR NEXT SUBMISSION</div>
+    </div>
+    <div class="cover-foot-r">
+      <div class="foot-lbl">DATE</div>
+      <div class="foot-date">{{ report_date }}</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 · 目录 ============ -->
+<section class="page toc-page" data-chapter="toc">
+  <div class="toc-eyebrow">CONTENTS · 报告目录</div>
+  <div class="toc-title">Contents</div>
+  <div class="toc-title-cn">本册路线图 · 从"该不该投"到"怎么投"</div>
+  <div class="toc-divider"></div>
+
+  <ul class="toc-list">
+    <li class="toc-entry">
+      <div class="toc-num">01</div>
+      <div class="toc-body">
+        <div class="toc-name">投递判断 · 该不该投这份 JD</div>
+        <div class="toc-sub">fit_score · 一句话结论 · 投递前最少动作</div>
+      </div>
+      <div class="toc-page-no">{{ pn('ch01') }}</div>
+    </li>
+    <li class="toc-entry">
+      <div class="toc-num">02</div>
+      <div class="toc-body">
+        <div class="toc-name">JD 结构化解构 · 招聘方到底要什么</div>
+        <div class="toc-sub">必备 · 优先 · 加分 · 隐性推断 —— 四类要求全景</div>
+      </div>
+      <div class="toc-page-no">{{ pn('ch02') }}</div>
+    </li>
+    <li class="toc-entry">
+      <div class="toc-num">03</div>
+      <div class="toc-body">
+        <div class="toc-name">Match Board · 每条要求 × 简历证据的四色矩阵</div>
+        <div class="toc-sub">已支撑 · 边缘信号 · 未落笔 · 缺失 —— 本报告视觉重心</div>
+      </div>
+      <div class="toc-page-no">{{ pn('ch03') }}</div>
+    </li>
+    <li class="toc-entry">
+      <div class="toc-num">04</div>
+      <div class="toc-body">
+        <div class="toc-name">风险分层 · 硬门槛 / 优先强化 / 语境推断</div>
+        <div class="toc-sub">must_have 阻投 · preferred/nice 掉分 · inferred 待核实 —— 三段不同权重</div>
+      </div>
+      <div class="toc-page-no">{{ pn('ch04') }}</div>
+    </li>
+    <li class="toc-entry">
+      <div class="toc-num">05</div>
+      <div class="toc-body">
+        <div class="toc-name">优势放大清单 · 简历里已有的加分点</div>
+        <div class="toc-sub">nice-to-have 匹配 · 在这份 JD 语境下值得凸显</div>
+      </div>
+      <div class="toc-page-no">{{ pn('ch05') }}</div>
+    </li>
+    <li class="toc-entry">
+      <div class="toc-num">06</div>
+      <div class="toc-body">
+        <div class="toc-name">Rewrite Cards · 可直接抄进简历的改写卡</div>
+        <div class="toc-sub">Before / After · 关联 JD 要求 · 面试锚点</div>
+      </div>
+      <div class="toc-page-no">{{ pn('ch06') }}</div>
+    </li>
+    <li class="toc-entry">
+      <div class="toc-num">07</div>
+      <div class="toc-body">
+        <div class="toc-name">Evidence Collection · 投递前要补齐的事实</div>
+        <div class="toc-sub">该问谁 · 该去哪查 · 按优先级排序</div>
+      </div>
+      <div class="toc-page-no">{{ pn('ch07') }}</div>
+    </li>
+    <li class="toc-entry">
+      <div class="toc-num">08</div>
+      <div class="toc-body">
+        <div class="toc-name">Cover Letter Angle · 自荐信定位骨架</div>
+        <div class="toc-sub">开门 · 亮相 · 收尾 —— 三段落笔思路</div>
+      </div>
+      <div class="toc-page-no">{{ pn('ch08') }}</div>
+    </li>
+    <li class="toc-entry">
+      <div class="toc-num">09</div>
+      <div class="toc-body">
+        <div class="toc-name">Interview Preparation · 面试官会针对这几处追问</div>
+        <div class="toc-sub">追问逻辑 · 回答框架 · 面试前准备 · 避免的表达</div>
+      </div>
+      <div class="toc-page-no">{{ pn('ch09') }}</div>
+    </li>
+    <li class="toc-entry">
+      <div class="toc-num">—</div>
+      <div class="toc-body">
+        <div class="toc-name">主编寄语</div>
+        <div class="toc-sub">合上简历前的最后一段话</div>
+      </div>
+      <div class="toc-page-no">{{ pn('editor') }}</div>
+    </li>
+  </ul>
+
+  <div class="toc-footnote">
+    * 本报告所有判断只基于本次提交的 JD 原文与简历原文,不做通用画像推演。页码基于本册实际渲染生成,附录部分按证据密度自动分页。
+  </div>
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>CONTENTS · 目录</span></div>
+</section>
+
+<!-- ============ CH01 · 投递判断 ============ -->
+<section class="page" data-chapter="ch01">
+  <a data-toc-key="ch01"></a>
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>JD DIAGNOSIS · {{ data.meta.candidate_name }} · {{ data.meta.target_role }}</span></div>
+
+  <div class="section-eyebrow">CHAPTER 01 · 投递可行性判断</div>
+  <h1 class="section-title"><span class="num">01</span>该不该投这份 JD</h1>
+
+  {% if data.meta.scope_disclaimer %}
+  <div class="scope-note">
+    <strong>SCOPE</strong>{{ data.meta.scope_disclaimer }}
+  </div>
+  {% endif %}
+
+  {% set sd = data.submit_decision %}
+  <div class="jd-fit-hero">
+    <div class="jd-fit-left">
+      <div class="jd-fit-lbl">JD FIT SCORE · 简历与本 JD 的匹配度</div>
+      <div class="jd-fit-num">{{ sd.fit_score }}</div>
+      <div class="jd-fit-calib">{{ sd.score_calibration }}</div>
+    </div>
+    <div class="jd-fit-right">
+      <span class="jd-verdict-badge {{ verdict_class[sd.verdict] }}">{{ verdict_label[sd.verdict] }}</span>
+      <div class="jd-verdict-line">{{ sd.one_line_verdict }}</div>
+    </div>
+  </div>
+
+  {% if sd.minimum_actions_before_submit %}
+  <div class="jd-min-actions">
+    <h4>MINIMUM ACTIONS · 投递前最少要做的事</h4>
+    <ol>
+      {% for a in sd.minimum_actions_before_submit %}<li>{{ a }}</li>{% endfor %}
+    </ol>
+  </div>
+  {% endif %}
+
+  <div class="jd-decision-note">
+    这一页的判断,是<strong>本册所有后续章节的入口</strong>。判定档位不同,后面每一章的读法也不同:
+    「submit_now」= 通读复核即可;「light_edit」= 精读 CH06 改写卡;
+    「submit_after_rewrite」= 依次 CH04 → CH06 → CH07 补证据后再投;
+    「do_not_submit」= 优先看 CH02 的错配点,考虑改投其他 JD。
+  </div>
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>CHAPTER 01 · 投递判断</span></div>
+</section>
+
+<!-- ============ CH02 · JD 结构化解构 ============ -->
+{% set req_per_page = 8 %}
+{% set req_pages = ((data.jd_requirements | length) / req_per_page) | round(0, 'ceil') | int %}
+{% if req_pages < 1 %}{% set req_pages = 1 %}{% endif %}
+{% for pg in range(req_pages) %}
+<section class="page" data-chapter="ch02-{{ pg + 1 }}">
+  {% if pg == 0 %}<a data-toc-key="ch02"></a>{% endif %}
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>JD DIAGNOSIS · {{ data.meta.candidate_name }} · {{ data.meta.target_role }}</span></div>
+
+  {% if pg == 0 %}
+  <div class="section-eyebrow">CHAPTER 02 · JD 结构化解构</div>
+  <h1 class="section-title"><span class="num">02</span>招聘方到底要什么</h1>
+  <p class="chapter-lede">先把 JD 拆成一条一条可对齐的要求;每条都指回 JD 原文,不做补脑。<strong>「INFER」标签</strong>的那几条是我们从上下文合理推断,附有推断依据。</p>
+
+  <div class="jd-req-summary">
+    <span class="jd-pill p-must">MUST · {{ requirement_summary.must_have }}</span>
+    <span class="jd-pill p-pref">PREFERRED · {{ requirement_summary.preferred }}</span>
+    <span class="jd-pill p-nice">NICE-TO-HAVE · {{ requirement_summary.nice_to_have }}</span>
+    <span class="jd-pill p-inf">INFERRED · {{ requirement_summary.inferred_from_context }}</span>
+    <span class="jd-pill p-total">TOTAL · {{ requirement_summary.total }}</span>
+  </div>
+  {% else %}
+  <div class="section-eyebrow">CHAPTER 02 · JD 结构化解构(续 · {{ pg + 1 }}/{{ req_pages }})</div>
+  <h1 class="section-title"><span class="num">02</span>招聘方到底要什么</h1>
+  {% endif %}
+
+  <table class="jd-req-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>类型</th>
+        <th>要求</th>
+        <th>JD 原文证据</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for r in data.jd_requirements[pg * req_per_page : (pg + 1) * req_per_page] %}
+      <tr>
+        <td class="jd-req-id">{{ r.id }}</td>
+        <td><span class="jd-type-badge {{ req_type_class[r.requirement_type] }}">{{ req_type_label[r.requirement_type] }}</span></td>
+        <td class="jd-req-text">
+          {{ r.requirement }}
+          {% if r.requirement_type == 'inferred_from_context' and r.inference_note %}
+            <div class="jd-inf-note">推断依据 · {{ r.inference_note }}</div>
+          {% endif %}
+        </td>
+        <td class="jd-req-ev">{{ r.jd_evidence }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>CHAPTER 02 · JD 结构化 · {{ pg + 1 }}/{{ req_pages }}</span></div>
+</section>
+{% endfor %}
+
+<!-- ============ CH03 · Match Board 四色矩阵 ============ -->
+{% set mb_per_page = 9 %}
+{% set mb_items = data.match_board['items'] %}
+{% set mb_pages = ((mb_items | length) / mb_per_page) | round(0, 'ceil') | int %}
+{% if mb_pages < 1 %}{% set mb_pages = 1 %}{% endif %}
+{% for pg in range(mb_pages) %}
+<section class="page" data-chapter="ch03-{{ pg + 1 }}">
+  {% if pg == 0 %}<a data-toc-key="ch03"></a>{% endif %}
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>JD DIAGNOSIS · {{ data.meta.candidate_name }} · {{ data.meta.target_role }}</span></div>
+
+  {% if pg == 0 %}
+  <div class="section-eyebrow">CHAPTER 03 · MATCH BOARD 四色矩阵</div>
+  <h1 class="section-title"><span class="num">03</span>每条要求,简历里能不能指出证据</h1>
+  <p class="chapter-lede">{{ data.match_board.context }}</p>
+
+  <div class="jd-mb-summary">
+    <span class="jd-pill p-matched">MATCHED · {{ match_board_summary.matched }}</span>
+    <span class="jd-pill p-weakly">WEAKLY · {{ match_board_summary.weakly_matched }}</span>
+    <span class="jd-pill p-notev">NOT EVIDENCED · {{ match_board_summary.not_evidenced }}</span>
+    <span class="jd-pill p-missing">MISSING · {{ match_board_summary.missing }}</span>
+    <span class="jd-pill p-total">TOTAL · {{ match_board_summary.total }}</span>
+  </div>
+  {% else %}
+  <div class="section-eyebrow">CHAPTER 03 · MATCH BOARD(续 · {{ pg + 1 }}/{{ mb_pages }})</div>
+  <h1 class="section-title"><span class="num">03</span>每条要求,简历里能不能指出证据</h1>
+  {% endif %}
+
+  <table class="jd-match-board">
+    <thead>
+      <tr>
+        <th style="width:16%">JD 要求</th>
+        <th style="width:9%">类型</th>
+        <th style="width:11%">状态</th>
+        <th style="width:32%">简历证据</th>
+        <th style="width:32%">Gap 说明</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for it in mb_items[pg * mb_per_page : (pg + 1) * mb_per_page] %}
+      <tr class="jd-mb-row {{ status_class[it.status] }}">
+        <td class="jd-mb-req">{{ it.jd_requirement }}<div class="jd-mb-reqid">{{ it.jd_requirement_id }}</div></td>
+        <td><span class="jd-type-badge {{ req_type_class[it.requirement_type] }}">{{ req_type_label[it.requirement_type] }}</span></td>
+        <td><span class="jd-status-badge {{ status_class[it.status] }}">{{ status_label[it.status] }}</span></td>
+        <td class="jd-mb-ev">{% if it.resume_evidence %}{{ it.resume_evidence }}{% else %}<span class="jd-mb-empty">——</span>{% endif %}</td>
+        <td class="jd-mb-gap">{{ it.gap_note }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>CHAPTER 03 · MATCH BOARD · {{ pg + 1 }}/{{ mb_pages }}</span></div>
+</section>
+{% endfor %}
+
+<!-- ============ CH04 · 风险分层 (硬门槛 / 优先强化 / 语境推断) ============ -->
+{# Phase 1 关键改动: 一个章节里三段风险按 requirement_type 严格分层, 各自视觉权重不同。
+   硬门槛 = 红, 优先强化 = 金, 语境推断 = 浅灰。永远不再让 preferred 塞进"硬伤"页。 #}
+{% set blockers = data.must_have_blockers %}
+{% set gaps = data.priority_gaps %}
+{% set risks = data.inferred_risks %}
+
+{# ---- CH04 封面 · 三段汇总 ---- #}
+<section class="page" data-chapter="ch04">
+  <a data-toc-key="ch04"></a>
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>JD DIAGNOSIS · {{ data.meta.candidate_name }} · {{ data.meta.target_role }}</span></div>
+
+  <div class="section-eyebrow">CHAPTER 04 · RISK LAYERS · 风险分层</div>
+  <h1 class="section-title"><span class="num">04</span>三段风险: 不能投 / 会掉分 / 待核实</h1>
+  <p class="chapter-lede">同样是"简历没体现",分量不一样。本章把风险严格按 JD 要求类型分成三段: <strong>硬门槛</strong> (must_have 未支撑, 不改就别投) · <strong>优先强化</strong> (preferred / nice_to_have 没凸显, 影响竞争力) · <strong>语境推断</strong> (JD 上下文推断出的信号, 建议核实, 不作否决依据)。</p>
+
+  <div class="jd-risk-summary">
+    <div class="jd-risk-tier tier-must">
+      <div class="tier-head">
+        <span class="tier-badge">TIER 1 · 硬门槛</span>
+        <span class="tier-count">{{ must_have_blocker_summary.total }} 条</span>
+      </div>
+      <div class="tier-desc">must_have 要求未支撑 · 不改就不建议投</div>
+      <div class="tier-mix">
+        {% if must_have_blocker_summary.high %}<span class="jd-pill p-high">HIGH · {{ must_have_blocker_summary.high }}</span>{% endif %}
+        {% if must_have_blocker_summary.medium %}<span class="jd-pill p-medium">MEDIUM · {{ must_have_blocker_summary.medium }}</span>{% endif %}
+        {% if must_have_blocker_summary.low %}<span class="jd-pill p-low">LOW · {{ must_have_blocker_summary.low }}</span>{% endif %}
+      </div>
+    </div>
+
+    <div class="jd-risk-tier tier-gap">
+      <div class="tier-head">
+        <span class="tier-badge">TIER 2 · 优先强化</span>
+        <span class="tier-count">{{ priority_gap_summary.total }} 条</span>
+      </div>
+      <div class="tier-desc">preferred / nice_to_have 未凸显 · 影响竞争力但不阻投</div>
+      <div class="tier-mix">
+        {% if priority_gap_summary.high %}<span class="jd-pill p-high">HIGH · {{ priority_gap_summary.high }}</span>{% endif %}
+        {% if priority_gap_summary.medium %}<span class="jd-pill p-medium">MEDIUM · {{ priority_gap_summary.medium }}</span>{% endif %}
+        {% if priority_gap_summary.low %}<span class="jd-pill p-low">LOW · {{ priority_gap_summary.low }}</span>{% endif %}
+      </div>
+    </div>
+
+    <div class="jd-risk-tier tier-inferred">
+      <div class="tier-head">
+        <span class="tier-badge">TIER 3 · 语境推断</span>
+        <span class="tier-count">{{ inferred_risk_summary.total }} 条</span>
+      </div>
+      <div class="tier-desc">JD 上下文推断出的信号 · 供候选人核实, 不作否决依据</div>
+      <div class="tier-mix">
+        {% if inferred_risk_summary.medium %}<span class="jd-pill p-medium">MEDIUM · {{ inferred_risk_summary.medium }}</span>{% endif %}
+        {% if inferred_risk_summary.low %}<span class="jd-pill p-low">LOW · {{ inferred_risk_summary.low }}</span>{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="jd-risk-reading-note">
+    <strong>如何读这三段</strong> · 硬门槛必须闭环到 CH06 改写卡, 才是可执行的问题; 优先强化决定"面试机会有多稳"; 语境推断出的信号<strong>不是判决</strong>, 是一份"投前可选核实清单", 若能补齐可以增加信任度, 补不齐也不影响是否投递。
+  </div>
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>CHAPTER 04 · RISK LAYERS · 封面</span></div>
+</section>
+
+{# ---- CH04-A · 硬门槛 must_have_blockers ---- #}
+{% if blockers | length == 0 %}
+<section class="page" data-chapter="ch04-must">
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>JD DIAGNOSIS · {{ data.meta.candidate_name }} · {{ data.meta.target_role }}</span></div>
+  <div class="section-eyebrow">CHAPTER 04-A · TIER 1 · 硬门槛</div>
+  <h1 class="section-title"><span class="num">04</span>硬门槛 · 未发现</h1>
+  <p class="chapter-lede">在本次 JD 的 <strong>must_have</strong> 要求上, 简历没有出现会直接挡在筛简历环节的硬伤。请继续看下一段 <strong>优先强化</strong> 与 <strong>CH06 改写卡</strong>。</p>
+  <div class="jd-empty-badge">
+    <div class="jd-empty-icon">✓</div>
+    <div class="jd-empty-body">
+      <div class="jd-empty-title">NO HARD BLOCKER</div>
+      <div class="jd-empty-sub">本份简历相对本份 JD, 未识别出会阻挡进入下一轮的必答项缺失。</div>
+    </div>
+  </div>
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>CHAPTER 04-A · TIER 1 · 硬门槛</span></div>
+</section>
+{% else %}
+{% set blk_per_page = 2 %}
+{% set blk_pages = ((blockers | length) / blk_per_page) | round(0, 'ceil') | int %}
+{% for pg in range(blk_pages) %}
+<section class="page" data-chapter="ch04-must-{{ pg + 1 }}">
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>JD DIAGNOSIS · {{ data.meta.candidate_name }} · {{ data.meta.target_role }}</span></div>
+
+  {% if pg == 0 %}
+  <div class="section-eyebrow">CHAPTER 04-A · TIER 1 · 硬门槛</div>
+  <h1 class="section-title"><span class="num">04</span>TIER 1 · 硬门槛 (must_have)</h1>
+  <p class="chapter-lede">下面每一条,都是 <strong>必备要求</strong> 里、简历目前无法给出充分证据的问题。按严重度排序;<strong>不处理就不建议投</strong>。每条都闭环到一张 CH06 改写卡。</p>
+  {% else %}
+  <div class="section-eyebrow">CHAPTER 04-A · TIER 1 · 硬门槛(续 · {{ pg + 1 }}/{{ blk_pages }})</div>
+  <h1 class="section-title"><span class="num">04</span>TIER 1 · 硬门槛 (must_have)</h1>
+  {% endif %}
+
+  {% for b in blockers[pg * blk_per_page : (pg + 1) * blk_per_page] %}
+  <div class="jd-blocker-card tier-must {{ severity_class[b.severity] }}">
+    <div class="jd-bl-head">
+      <div class="jd-bl-title">{{ b.problem }}</div>
+      <div class="jd-bl-tags">
+        <span class="jd-tag t-sev {{ severity_class[b.severity] }}">{{ severity_label[b.severity] }}</span>
+        <span class="jd-tag t-stage">影响: {{ stage_label[b.impact_stage] }}</span>
+        <span class="jd-tag t-req">{{ b.jd_requirement_id }}</span>
+      </div>
+    </div>
+    <div class="jd-bl-row">
+      <div class="jd-bl-lbl">影响说明</div>
+      <div class="jd-bl-val">{{ b.impact_explanation }}</div>
+    </div>
+    <div class="jd-bl-row">
+      <div class="jd-bl-lbl">建议动作</div>
+      <div class="jd-bl-val">{{ b.recommended_action }}</div>
+    </div>
+    <div class="jd-bl-linked">改法详情见 <strong>{{ b.linked_rewrite_card_id }}</strong>(CH06 改写卡)</div>
+  </div>
+  {% endfor %}
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>CHAPTER 04-A · TIER 1 · 硬门槛 · {{ pg + 1 }}/{{ blk_pages }}</span></div>
+</section>
+{% endfor %}
+{% endif %}
+
+{# ---- CH04-B · 优先强化 priority_gaps ---- #}
+{% if gaps | length == 0 %}
+<section class="page" data-chapter="ch04-gap">
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>JD DIAGNOSIS · {{ data.meta.candidate_name }} · {{ data.meta.target_role }}</span></div>
+  <div class="section-eyebrow">CHAPTER 04-B · TIER 2 · 优先强化</div>
+  <h1 class="section-title"><span class="num">04</span>优先强化 · 未识别短板</h1>
+  <p class="chapter-lede">在本次 JD 的 <strong>preferred / nice_to_have</strong> 要求上, 简历现有呈现无明显掉分点。</p>
+  <div class="jd-empty-badge muted">
+    <div class="jd-empty-body">
+      <div class="jd-empty-title">NO PRIORITY GAP</div>
+      <div class="jd-empty-sub">当前简历相对本 JD 的加分项已有较好覆盖, 请重点看下一段的语境推断信号。</div>
+    </div>
+  </div>
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>CHAPTER 04-B · TIER 2 · 优先强化</span></div>
+</section>
+{% else %}
+{% set gap_per_page = 2 %}
+{% set gap_pages = ((gaps | length) / gap_per_page) | round(0, 'ceil') | int %}
+{% for pg in range(gap_pages) %}
+<section class="page" data-chapter="ch04-gap-{{ pg + 1 }}">
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>JD DIAGNOSIS · {{ data.meta.candidate_name }} · {{ data.meta.target_role }}</span></div>
+
+  {% if pg == 0 %}
+  <div class="section-eyebrow">CHAPTER 04-B · TIER 2 · 优先强化</div>
+  <h1 class="section-title"><span class="num">04</span>TIER 2 · 优先强化 (preferred / nice)</h1>
+  <p class="chapter-lede">下面每一条,都是 <strong>加分类要求</strong>: 简历目前呈现不足会在竞争中掉分, 但不构成阻投。若能凸显, 竞争力显著上升。</p>
+  {% else %}
+  <div class="section-eyebrow">CHAPTER 04-B · TIER 2 · 优先强化(续 · {{ pg + 1 }}/{{ gap_pages }})</div>
+  <h1 class="section-title"><span class="num">04</span>TIER 2 · 优先强化 (preferred / nice)</h1>
+  {% endif %}
+
+  {% for g in gaps[pg * gap_per_page : (pg + 1) * gap_per_page] %}
+  <div class="jd-blocker-card tier-gap {{ severity_class[g.severity] }}">
+    <div class="jd-bl-head">
+      <div class="jd-bl-title">{{ g.problem }}</div>
+      <div class="jd-bl-tags">
+        <span class="jd-tag t-sev {{ severity_class[g.severity] }}">{{ severity_label[g.severity] }}</span>
+        <span class="jd-tag t-stage">影响: {{ stage_label[g.impact_stage] }}</span>
+        <span class="jd-tag t-req">{{ g.jd_requirement_id }}</span>
+      </div>
+    </div>
+    <div class="jd-bl-row">
+      <div class="jd-bl-lbl">竞争影响</div>
+      <div class="jd-bl-val">{{ g.impact_explanation }}</div>
+    </div>
+    <div class="jd-bl-row">
+      <div class="jd-bl-lbl">建议动作</div>
+      <div class="jd-bl-val">{{ g.recommended_action }}</div>
+    </div>
+    {% if g.linked_rewrite_card_id %}
+    <div class="jd-bl-linked">改法详情见 <strong>{{ g.linked_rewrite_card_id }}</strong>(CH06 改写卡)</div>
+    {% endif %}
+  </div>
+  {% endfor %}
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>CHAPTER 04-B · TIER 2 · 优先强化 · {{ pg + 1 }}/{{ gap_pages }}</span></div>
+</section>
+{% endfor %}
+{% endif %}
+
+{# ---- CH04-C · 语境推断 inferred_risks (仅当存在时才印) ---- #}
+{% if risks | length > 0 %}
+{% set risk_per_page = 3 %}
+{% set risk_pages = ((risks | length) / risk_per_page) | round(0, 'ceil') | int %}
+{% for pg in range(risk_pages) %}
+<section class="page" data-chapter="ch04-risk-{{ pg + 1 }}">
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>JD DIAGNOSIS · {{ data.meta.candidate_name }} · {{ data.meta.target_role }}</span></div>
+
+  {% if pg == 0 %}
+  <div class="section-eyebrow">CHAPTER 04-C · TIER 3 · 语境推断</div>
+  <h1 class="section-title"><span class="num">04</span>TIER 3 · 语境推断 (inferred)</h1>
+  <p class="chapter-lede">下面每一条, 都是 <strong>从 JD 上下文推断</strong> 出的可能信号 —— <strong>不是 JD 原文明写</strong>, 也<strong>不是判决</strong>。它们的用处是: 让你在投前/面试前, 主动核实一下"招聘方可能会关注这些, 我到底有没有"。补不齐, 不影响是否投递。</p>
+  {% else %}
+  <div class="section-eyebrow">CHAPTER 04-C · TIER 3 · 语境推断(续 · {{ pg + 1 }}/{{ risk_pages }})</div>
+  <h1 class="section-title"><span class="num">04</span>TIER 3 · 语境推断 (inferred)</h1>
+  {% endif %}
+
+  {% for r in risks[pg * risk_per_page : (pg + 1) * risk_per_page] %}
+  <div class="jd-inferred-card conf-{{ r.confidence }}">
+    <div class="jd-bl-head">
+      <div class="jd-bl-title">{{ r.risk_note }}</div>
+      <div class="jd-bl-tags">
+        <span class="jd-tag t-conf conf-{{ r.confidence }}">CONFIDENCE · {{ r.confidence | upper }}</span>
+        <span class="jd-tag t-req">{{ r.jd_requirement_id }}</span>
+      </div>
+    </div>
+    <div class="jd-bl-row">
+      <div class="jd-bl-lbl">投前建议核实</div>
+      <div class="jd-bl-val">{{ r.verify_hint }}</div>
+    </div>
+    {% if r.linked_rewrite_card_id %}
+    <div class="jd-bl-linked">可参考 <strong>{{ r.linked_rewrite_card_id }}</strong>(CH06 改写卡)</div>
+    {% endif %}
+  </div>
+  {% endfor %}
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>CHAPTER 04-C · TIER 3 · 语境推断 · {{ pg + 1 }}/{{ risk_pages }}</span></div>
+</section>
+{% endfor %}
+{% endif %}
+
+<!-- ============ CH05 · 优势放大清单 ============ -->
+<section class="page" data-chapter="ch05">
+  <a data-toc-key="ch05"></a>
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>JD DIAGNOSIS · {{ data.meta.candidate_name }} · {{ data.meta.target_role }}</span></div>
+
+  <div class="section-eyebrow">CHAPTER 05 · 优势放大清单</div>
+  <h1 class="section-title"><span class="num">05</span>简历里已有,值得凸显的加分点</h1>
+  <p class="chapter-lede">下面每一条,都是简历里<strong>已经存在</strong>、但在这份 JD 的语境里可以更凸显的东西。这些不是要新造事实,而是把已有的东西放到招聘方眼前。</p>
+
+  {% if data.strengths_to_amplify %}
+  <ul class="jd-strength-list">
+    {% for s in data.strengths_to_amplify %}
+    <li class="jd-strength-item">
+      <div class="jd-strength-mark">{{ '%02d' | format(loop.index) }}</div>
+      <div class="jd-strength-body">{{ s }}</div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <div class="jd-empty-badge muted">
+    <div class="jd-empty-body">
+      <div class="jd-empty-title">暂未识别出可显著放大的加分点</div>
+      <div class="jd-empty-sub">本份简历与本份 JD 相对错配, 建议先处理 CH04 blockers 与 CH06 改写卡。</div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>CHAPTER 05 · 优势放大</span></div>
+</section>
+
+<!-- ============ CH06 · Rewrite Cards ============ -->
+{% set cards = data.rewrite_cards %}
+{% set rw_per_page = 1 %}
+{% set rw_pages = ((cards | length) / rw_per_page) | round(0, 'ceil') | int %}
+{% if rw_pages < 1 %}{% set rw_pages = 1 %}{% endif %}
+{% for pg in range(rw_pages) %}
+<section class="page" data-chapter="ch06-{{ pg + 1 }}">
+  {% if pg == 0 %}<a data-toc-key="ch06"></a>{% endif %}
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>JD DIAGNOSIS · {{ data.meta.candidate_name }} · {{ data.meta.target_role }}</span></div>
+
+  {% if pg == 0 %}
+  <div class="section-eyebrow">CHAPTER 06 · REWRITE CARDS</div>
+  <h1 class="section-title"><span class="num">06</span>可直接抄进简历的改写卡</h1>
+  <p class="chapter-lede">每张卡都对应简历里的一段文字。<strong>READY</strong> 的可直接替换;<strong>VERIFY</strong> 的需要先补齐 `[待确认: ...]` 里的事实。改写只在<strong>已有事实</strong>上重新组织,不发明新经历。</p>
+  <div class="jd-rw-summary">
+    <span class="jd-pill p-ready">READY · {{ rewrite_summary.ready_to_use }}</span>
+    <span class="jd-pill p-verify">VERIFY · {{ rewrite_summary.needs_verification }}</span>
+    <span class="jd-pill p-total">TOTAL · {{ rewrite_summary.total }}</span>
+  </div>
+  {% else %}
+  <div class="section-eyebrow">CHAPTER 06 · REWRITE CARDS(续 · {{ pg + 1 }}/{{ rw_pages }})</div>
+  <h1 class="section-title"><span class="num">06</span>可直接抄进简历的改写卡</h1>
+  {% endif %}
+
+  {% for c in cards[pg * rw_per_page : (pg + 1) * rw_per_page] %}
+  <div class="jd-rw-card {% if c.rewrite_type == 'ready_to_use' %}rw-ready{% else %}rw-verify{% endif %}">
+    <div class="jd-rw-head">
+      <div class="jd-rw-title">
+        <span class="jd-rw-id">{{ c.id }}</span>
+        <span class="jd-rw-section">{{ c.resume_section }}</span>
+      </div>
+      <div class="jd-rw-tags">
+        {% if c.rewrite_type == 'ready_to_use' %}
+          <span class="jd-tag t-ready">READY · 可直接使用</span>
+        {% else %}
+          <span class="jd-tag t-verify">VERIFY · 待补事实</span>
+        {% endif %}
+        {% for rid in c.targets_requirement_ids %}
+          <span class="jd-tag t-req">→ {{ rid }}</span>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="jd-rw-compare">
+      <div class="jd-rw-side jd-rw-before">
+        <div class="jd-rw-side-lbl">BEFORE · 简历原文</div>
+        <div class="jd-rw-side-body">{{ c.original_text }}</div>
+      </div>
+      <div class="jd-rw-side jd-rw-after">
+        <div class="jd-rw-side-lbl">AFTER · 改写建议</div>
+        <div class="jd-rw-side-body">{{ c.rewritten_text }}</div>
+      </div>
+    </div>
+
+    {% if c.rewrite_type == 'needs_verification' and c.evidence_needed %}
+    <div class="jd-rw-evidence">
+      <div class="jd-rw-ev-title">投递前请核实以下事实</div>
+      <ul>
+        {% for e in c.evidence_needed %}<li>{{ e }}</li>{% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if c.interview_anchor %}
+    <div class="jd-rw-anchor">
+      <span class="jd-rw-anchor-lbl">面试锚点 · Q</span>
+      {{ c.interview_anchor }}
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>CHAPTER 06 · REWRITE · {{ pg + 1 }}/{{ rw_pages }}</span></div>
+</section>
+{% endfor %}
+
+<!-- ============ CH07 · Evidence Collection ============ -->
+{% set ev_items = data.evidence_collection['items'] %}
+{% set ev_per_page = 10 %}
+{% set ev_pages = ((ev_items | length) / ev_per_page) | round(0, 'ceil') | int %}
+{% if ev_pages < 1 %}{% set ev_pages = 1 %}{% endif %}
+{% for pg in range(ev_pages) %}
+<section class="page" data-chapter="ch07-{{ pg + 1 }}">
+  {% if pg == 0 %}<a data-toc-key="ch07"></a>{% endif %}
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>JD DIAGNOSIS · {{ data.meta.candidate_name }} · {{ data.meta.target_role }}</span></div>
+
+  {% if pg == 0 %}
+  <div class="section-eyebrow">CHAPTER 07 · EVIDENCE COLLECTION</div>
+  <h1 class="section-title"><span class="num">07</span>投递前要主动补齐的事实</h1>
+  <p class="chapter-lede">{% if data.evidence_collection.context %}{{ data.evidence_collection.context }}{% else %}下面每一条都是"下班后打开备忘录要做的事"—— 补完才能让改写卡里的数字与描述有出处。{% endif %}</p>
+  {% else %}
+  <div class="section-eyebrow">CHAPTER 07 · EVIDENCE COLLECTION(续 · {{ pg + 1 }}/{{ ev_pages }})</div>
+  <h1 class="section-title"><span class="num">07</span>投递前要主动补齐的事实</h1>
+  {% endif %}
+
+  {% if ev_items %}
+  <table class="jd-evidence-table">
+    <thead>
+      <tr>
+        <th style="width:9%">ID</th>
+        <th style="width:8%">优先级</th>
+        <th style="width:36%">要收集的事实</th>
+        <th style="width:22%">关联到</th>
+        <th style="width:25%">在哪拿到</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for e in ev_items[pg * ev_per_page : (pg + 1) * ev_per_page] %}
+      <tr class="jd-ev-row {{ severity_class[e.priority] }}">
+        <td class="jd-ev-id">{{ e.id }}</td>
+        <td><span class="jd-tag t-sev {{ severity_class[e.priority] }}">{{ severity_label[e.priority] }}</span></td>
+        <td class="jd-ev-ask">{{ e.ask }}</td>
+        <td class="jd-ev-linked">
+          {% for rid in e.linked_requirement_ids %}<span class="jd-tag t-req">{{ rid }}</span>{% endfor %}
+          {% for cid in e.linked_rewrite_card_ids %}<span class="jd-tag t-rw">{{ cid }}</span>{% endfor %}
+        </td>
+        <td class="jd-ev-where">{{ e.where_to_get }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="jd-empty-badge muted">
+    <div class="jd-empty-body">
+      <div class="jd-empty-title">暂无需补齐的证据</div>
+      <div class="jd-empty-sub">简历现有事实已足够本次投递,可直接进入 CH06 的改写建议阶段。</div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>CHAPTER 07 · EVIDENCE · {{ pg + 1 }}/{{ ev_pages }}</span></div>
+</section>
+{% endfor %}
+
+<!-- ============ CH08 · Cover Letter Angle ============ -->
+<section class="page" data-chapter="ch08">
+  <a data-toc-key="ch08"></a>
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>JD DIAGNOSIS · {{ data.meta.candidate_name }} · {{ data.meta.target_role }}</span></div>
+
+  <div class="section-eyebrow">CHAPTER 08 · COVER LETTER ANGLE</div>
+  <h1 class="section-title"><span class="num">08</span>自荐信怎么写这三段</h1>
+  <p class="chapter-lede">这不是完整信件, 是<strong>三段落笔骨架</strong>: 一段开门, 一段亮相, 一段收尾。你可以把它当成信的骨头,自己填血肉。</p>
+
+  {% set cl = data.cover_letter_angle %}
+  <div class="jd-cover-letter">
+    <div class="jd-cl-block">
+      <div class="jd-cl-stage">HOOK · 开门 · 让读者继续读下去</div>
+      <div class="jd-cl-body">{{ cl.hook }}</div>
+    </div>
+    <div class="jd-cl-block">
+      <div class="jd-cl-stage">POSITIONING · 亮相 · 你与这份 JD 的一句话交集</div>
+      <div class="jd-cl-body">{{ cl.positioning }}</div>
+    </div>
+    <div class="jd-cl-block">
+      <div class="jd-cl-stage">CLOSING · 收尾 · 主动而不乞求</div>
+      <div class="jd-cl-body">{{ cl.closing }}</div>
+    </div>
+  </div>
+
+  <div class="jd-cl-tip">
+    * 三段合计控制在 180 字以内;开门<strong>不要以"贵司好"开头</strong>,让第一句直接指向具体项目或事实。
+  </div>
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>CHAPTER 08 · COVER LETTER</span></div>
+</section>
+
+<!-- ============ CH09 · Interview Preparation ============ -->
+{% set iq_per_page = 2 %}
+{% set iq_pages = ((data.interview_preparation | length) / iq_per_page) | round(0, 'ceil') | int %}
+{% if iq_pages < 1 %}{% set iq_pages = 1 %}{% endif %}
+{% for pg in range(iq_pages) %}
+<section class="page" data-chapter="ch09-{{ pg + 1 }}">
+  {% if pg == 0 %}<a data-toc-key="ch09"></a>{% endif %}
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>JD DIAGNOSIS · {{ data.meta.candidate_name }} · {{ data.meta.target_role }}</span></div>
+
+  {% if pg == 0 %}
+  <div class="section-eyebrow">CHAPTER 09 · INTERVIEW PREPARATION</div>
+  <h1 class="section-title"><span class="num">09</span>面试官会针对这几处追问</h1>
+  <p class="chapter-lede">下面每一道题,都从这份 JD 与简历的<strong>交叉推演</strong>而来。为什么会问 · 怎么答 · 面试前准备什么 · 避免哪些表达 —— 一次说清。</p>
+  {% else %}
+  <div class="section-eyebrow">CHAPTER 09 · INTERVIEW PREPARATION(续 · {{ pg + 1 }}/{{ iq_pages }})</div>
+  <h1 class="section-title"><span class="num">09</span>面试官会针对这几处追问</h1>
+  {% endif %}
+
+  {% for iq in data.interview_preparation[pg * iq_per_page : (pg + 1) * iq_per_page] %}
+  <div class="jd-iq-card">
+    <div class="jd-iq-q">{{ iq.question }}</div>
+    <div class="jd-iq-why">
+      <span class="jd-iq-lbl">为什么会问</span>
+      {{ iq.why_it_will_be_asked }}
+    </div>
+
+    <div class="jd-iq-lbl-row">回答框架</div>
+    <ol class="jd-iq-framework">
+      {# 三层防御的最后一层: schema 已 coerce string→list, 但仍兜住 LLM 偶发 str 输出 —— 防 Jinja 逐字符迭代爆版 #}
+      {% if iq.answer_framework is string %}
+        <li>{{ iq.answer_framework }}</li>
+      {% else %}
+        {% for step in iq.answer_framework if step %}
+          {% if step is string %}<li>{{ step }}</li>{% else %}{% for x in step %}<li>{{ x }}</li>{% endfor %}{% endif %}
+        {% endfor %}
+      {% endif %}
+    </ol>
+
+    <div class="jd-iq-lbl-row">面试前要准备的事实</div>
+    <ul class="jd-iq-facts">
+      {% if iq.facts_to_prepare is string %}
+        <li>{{ iq.facts_to_prepare }}</li>
+      {% else %}
+        {% for f in iq.facts_to_prepare if f %}
+          {% if f is string %}<li>{{ f }}</li>{% else %}{% for x in f %}<li>{{ x }}</li>{% endfor %}{% endif %}
+        {% endfor %}
+      {% endif %}
+    </ul>
+
+    {% if iq.avoid_saying %}
+    <div class="jd-iq-avoid">
+      <strong>AVOID · </strong>{{ iq.avoid_saying }}
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>CHAPTER 09 · INTERVIEW · {{ pg + 1 }}/{{ iq_pages }}</span></div>
+</section>
+{% endfor %}
+
+<!-- ============ 主编寄语 ============ -->
+<section class="page" data-chapter="editor">
+  <a data-toc-key="editor"></a>
+  <div class="header-brand"><span class="brand">TOIVO CAREER</span><span>JD DIAGNOSIS · {{ data.meta.candidate_name }} · {{ data.meta.target_role }}</span></div>
+
+  <div class="section-eyebrow">EDITOR'S NOTE · 主编寄语</div>
+  <h1 class="section-title">最后想对你说的一段话</h1>
+
+  <div class="final-words">
+    {{ data.final_words }}
+    <div class="signature">— Toivo Career · JD Strategy Team</div>
+  </div>
+
+  <div class="footer-brand"><span>© 2026 TOIVO CAREER</span><span>EDITOR'S NOTE · 主编寄语</span></div>
+</section>
+
+<!-- ============ 尾页 ============ -->
+<section class="page end-page" data-chapter="closing">
+  <a data-toc-key="closing"></a>
+  <div class="end-top">
+    <div class="end-mark">TOIVO · CAREER</div>
+    <div class="end-issue">ISSUE Nº TVC-{{ report_no }} · {{ report_date }}</div>
+  </div>
+
+  <div class="end-hero">
+    <div class="thank">END OF STRATEGY</div>
+    <div class="end-brand">Toivo</div>
+    <div class="end-slogan">JD TARGETED · PRECISION SUBMISSION · EVIDENCED REWRITE</div>
+    <div class="end-line"></div>
+    <div class="end-copy">
+      这份报告只对这一份 JD 负责,不是通用画像。<br>
+      投出的每一份简历,都值得先经过一次这样的核对。
+    </div>
+  </div>
+
+  <div class="end-scope-note">
+    {% if data.privacy_and_scope_note %}{{ data.privacy_and_scope_note }}<br>{% endif %}
+    {% if data.meta.scope_disclaimer %}{{ data.meta.scope_disclaimer }}{% endif %}
+  </div>
+
+  <div class="end-foot">
+    <div class="end-foot-l">
+      <div class="ef-lbl">ABOUT · 关于</div>
+      <div class="ef-txt">TOIVO CAREER · 芬兰语「希望」<br>做一份让你被认真对待的求职材料。</div>
+    </div>
+    <div class="end-foot-r">
+      <div class="ef-lbl">FOLLOW-UP · 追问</div>
+      <div class="ef-txt">本册可在 3 日内追问一次<br>请附上册号 TVC-{{ report_no }}</div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
