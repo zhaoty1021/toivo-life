@@ -6,9 +6,10 @@ career_resume 业务线的 Pydantic 校验 schema。
 """
 from __future__ import annotations
 
-from typing import Dict, List, Literal, Optional
+import re
+from typing import Any, Dict, List, Literal, Optional
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, field_validator
 
 
 # 允许模型演进时冗余字段过来, 不因新字段炸掉旧 pipeline
@@ -116,14 +117,55 @@ class ProjectDeepDive(_Base):
 class InterviewQuestion(_Base):
     question: str
     why_it_will_be_asked: str
+    # 强类型化: 兜住 LLM 偶尔吐字符串导致 Jinja `{% for step in ... %}` 逐字符迭代 → A4 爆版的坑。
+    # answer_framework 必须是 list; validator 兜底把 "1) ... 2) ... 3) ..." 这种字符串切成 list。
+    answer_framework: List[str] = Field(default_factory=list)
+    facts_to_prepare: List[str] = Field(default_factory=list)
     avoid_saying: str
+
+    @field_validator("answer_framework", "facts_to_prepare", mode="before")
+    @classmethod
+    def _coerce_string_to_list(cls, v: Any) -> Any:
+        # 允许 LLM 偶尔吐字符串 —— 按 "1)" / "1." / "、" / "。" 切成 list, 不再让模板逐字符迭代。
+        if isinstance(v, str):
+            s = v.strip()
+            if not s:
+                return []
+            # 优先按编号切: "1) foo 2) bar 3) baz" 或 "1. foo 2. bar"
+            numbered = re.split(r"\s*\d+[\)\.、]\s*", s)
+            parts = [p.strip() for p in numbered if p.strip()]
+            if len(parts) >= 2:
+                return parts
+            # 否则按中文句号 / 分号切
+            parts = re.split(r"[。；;]\s*", s)
+            parts = [p.strip() for p in parts if p.strip()]
+            return parts or [s]
+        return v
 
 
 class SevenDayItem(_Base):
     day: int = Field(ge=1, le=7)
     focus: str
+    # actions 也是 list 型字段, 走同款 coerce, 防止 LLM 吐字符串 → 模板逐字符迭代 → A4 爆版
+    actions: List[str] = Field(default_factory=list)
     definition_of_done: str
     expected_gain: str
+
+    @field_validator("actions", mode="before")
+    @classmethod
+    def _coerce_string_to_list(cls, v: Any) -> Any:
+        if isinstance(v, str):
+            s = v.strip()
+            if not s:
+                return []
+            numbered = re.split(r"\s*\d+[\)\.、]\s*", s)
+            parts = [p.strip() for p in numbered if p.strip()]
+            if len(parts) >= 2:
+                return parts
+            parts = re.split(r"[。；;]\s*", s)
+            parts = [p.strip() for p in parts if p.strip()]
+            return parts or [s]
+        return v
 
 
 # ---------------- 顶层报告 ----------------

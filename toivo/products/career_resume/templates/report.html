@@ -478,13 +478,22 @@
 
     <div class="ip-row" style="margin-top:6px;"><span class="ip-lbl">回答框架</span></div>
     <ol class="ip-framework">
-      {% for step in ip.answer_framework if step %}<li>{{ step }}</li>{% endfor %}
-      {% if ip.answer_framework is string %}<li>{{ ip.answer_framework }}</li>{% endif %}
+      {# 防御性: schema 已 coerce string→list, 这里再兜一层 —— 若上游 bypass schema 直接吐 str,
+         必须先当成一整条渲染, 而不是让 jinja 逐字符迭代出几百个 <li> 把 A4 撑爆 #}
+      {% if ip.answer_framework is string %}
+        <li>{{ ip.answer_framework }}</li>
+      {% else %}
+        {% for step in ip.answer_framework if step %}<li>{{ step }}</li>{% endfor %}
+      {% endif %}
     </ol>
 
     <div class="ip-row"><span class="ip-lbl">面试前准备</span></div>
     <ul class="ip-facts">
-      {% for f in ip.facts_to_prepare %}<li>{{ f }}</li>{% endfor %}
+      {% if ip.facts_to_prepare is string %}
+        <li>{{ ip.facts_to_prepare }}</li>
+      {% else %}
+        {% for f in ip.facts_to_prepare %}<li>{{ f }}</li>{% endfor %}
+      {% endif %}
     </ul>
 
     <div class="ip-avoid"><strong style="color:var(--danger);font-size:8pt;letter-spacing:2px;">AVOID · </strong>{{ ip.avoid_saying }}</div>
@@ -521,7 +530,11 @@
       <div class="p-body">
         <div class="p-focus">{{ d.focus }}</div>
         <ul class="p-actions">
-          {% for a in d.actions %}<li>{{ a }}</li>{% endfor %}
+          {% if d.actions is string %}
+            <li>{{ d.actions }}</li>
+          {% else %}
+            {% for a in d.actions %}<li>{{ a }}</li>{% endfor %}
+          {% endif %}
         </ul>
       </div>
       <div class="p-right">

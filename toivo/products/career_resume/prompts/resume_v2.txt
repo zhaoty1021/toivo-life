@@ -180,7 +180,7 @@
     {{
       "question": "面试官可能提问的具体问题",
       "why_it_will_be_asked": "为什么这道题会被问 (基于简历里哪句话/哪个空缺推演出来)",
-      "answer_framework": "回答思路的框架 (3-4 步),不是模板答案",
+      "answer_framework": ["回答框架第 1 步 (一句话)", "第 2 步", "第 3 步", "第 4 步 —— 必须是数组, 3-4 个元素, 不允许写成一整个字符串"],
       "facts_to_prepare": ["候选人应该在面试前准备好的具体事实/数据/例子清单"],
       "avoid_saying": "候选人在这道题上应该避免的表述方式或答案陷阱 (一句话)"
     }}
@@ -215,6 +215,8 @@
 8. scope_disclaimer 必须固定为: '本报告基于通用岗位能力要求生成,不代表任何特定公司或特定 JD 的筛选标准。'
 9. keyword_matrix.context 必须说明本矩阵基于**目标岗位方向的通用画像**, 不针对具体 JD。
 10. 禁止在任何字段中出现以下词汇或近义表达: "劝退" "自爆" "体无完肤" "一眼假" "水货" "你不会" "你不行" "命理" "取名" "命名" "运势"。
+11. 字符串字段内部若需引用术语 / 强调短语 / 引原文, 必须使用中文引号「」或书名号《》包裹, 严禁使用未转义的 ASCII 双引号 `"..."` 包裹术语, 否则会破坏 JSON 语法导致解析失败。
+12. 所有声明为数组的字段 (interview_preparation[].answer_framework、interview_preparation[].facts_to_prepare、seven_day_plan[].actions、executive_summary.top_opportunities/top_blockers/this_week_focus、submission_readiness.minimum_changes_before_submit、keyword_matrix.items[].?? 等) 必须是 JSON 数组, 每个元素单独一个字符串。禁止把多步内容拼成一个长字符串塞进数组的单个元素, 也禁止直接用一个字符串代替数组。
 
 # 自检清单 (输出前静默检查)
 
